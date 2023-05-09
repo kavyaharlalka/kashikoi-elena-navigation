@@ -7,3 +7,7 @@ APP_DIR = MAIN_DIR + "src/"
 TEMPLATES_DIR = "./view/templates"
 
 CONTROLLER_DIR = APP_DIR + "controllers/"
+
+DATABASE_NAME = "navigation_history"
+
+TABLE_NAME = "history"
