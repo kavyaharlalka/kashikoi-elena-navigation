@@ -11,3 +11,5 @@ CONTROLLER_DIR = APP_DIR + "controllers/"
 DATABASE_NAME = "navigation_history"
 
 TABLE_NAME = "history"
+
+GMAP_API_KEY = ""
