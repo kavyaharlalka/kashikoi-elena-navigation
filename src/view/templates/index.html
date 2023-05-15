@@ -30,12 +30,19 @@
         margin-bottom: 10px;
       }
 
-       .container {
+       .outer-container {
        height: 400px;
-         background-color: #e84003ab; /* Set the background color */
+       background-color: #e84003ab; /* Set the background color */
+       width: 50%; /* Set the width to 50% of the viewport width */
+       float: left; /* Position the container on the left side */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        width: 50%; /* Set the width to 50% of the viewport width */
-        float: left; /* Position the container on the left side */
+       .inner-container {
+        padding: 70px;
+        background-color: white;
       }
 
     </style>
@@ -48,7 +55,10 @@
 
 <div class="main-container">
 <!-- Source and Destination Input -->
-<div class="container">
+<div class="outer-container">
+    <div class="inner-container">
+
+
     <div class="input-container">
     <label for="source">Source:</label>
     <input type="text" id="source" placeholder="Enter source location">
@@ -60,21 +70,20 @@
     <div class="input-container">
         <label for="dropdown">Choose the elevation type:</label>
         <select id="dropdown">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
+            <option value="option1">Maximum</option>
+            <option value="option2">Minimum</option>
         </select>
     </div>
     <div class="input-container">
     Choose the Algorithm:
         <div class="radio-group">
-    <label for="option1">
-        <input type="radio" id="option1" name="options" value="option1"> Option 1
+    <label for="A*">
+        <input type="radio" id="A*" name="options" value="A*"> A*
     </label>
     <br>
-    <label for="option2">
-        <input type="radio" id="option2" name="options" value="option2"> Option 2
+    <label for="Djsktra">
+        <input type="radio" id="Djsktra" name="options" value="Djsktra"> Option 2
     </label>
-
     </div>
     </div>
    <div class="input-container">
@@ -82,6 +91,7 @@
        <input type="range" id="scale" name="scale" min="0" max="100" value="50">
     </div>
     <button onclick="showMap()">Go</button>
+    </div>
 </div>
 
 
