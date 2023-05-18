@@ -16,7 +16,7 @@
          float: right;
       }
        .header {
-        height: 50vh; /* Set the height to 25% of the viewport height */
+        height: 80vh; /* Set the height to 25% of the viewport height */
       }
 
    .header img {
@@ -32,18 +32,125 @@
 
        .outer-container {
        height: 400px;
-       background-color: #e84003ab; /* Set the background color */
+       background-image: url('../images/back.png');
+         /* Set the background color #e84003ab; */
        width: 50%; /* Set the width to 50% of the viewport width */
        float: left; /* Position the container on the left side */
-        display: flex;
         justify-content: center;
         align-items: center;
       }
 
        .inner-container {
         padding: 70px;
-        background-color: white;
+         width: 500px;
+           padding: 20px;
+            background-color: rgba(241, 241, 241, 0.1);
+            /*#f1f1f1;*/
+            border-radius: 10px;
+            margin: 0 auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+             display: flex;
+            align-items: center;
+            margin-bottom: 10px;
       }
+
+       .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+                .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+
+        .overlay-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+                .text-overlay {
+            position: absolute;
+            top: 28%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #23864f;
+            font-size: 74px;
+            font-style:italic;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+
+                .text-overlay2 {
+            position: absolute;
+            top: 35%;
+            left: 74%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #242e1e;
+            font-size: 17px;
+            font-style:italic;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+            .label {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+                .textbox {
+            display: block;
+            flex-grow: 1;
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+      .label2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 10px;
+            }
+        .textbox2{
+                flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            }
+                    .textbox-container {
+
+            margin-bottom: 10px;
+        }
+
+        .textbox2:focus {
+            outline: none;
+            border-color: #80bdff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+
 
     </style>
 </head>
@@ -51,21 +158,22 @@
 
 <div class="header">
     <img src="../images/banner2.png" alt="Logo">
+    <div class="text-overlay">Elena</div>
+    <div class="text-overlay2">find you journey ...</div>
 </div>
 
 <div class="main-container">
 <!-- Source and Destination Input -->
 <div class="outer-container">
-    <div class="inner-container">
-
 
     <div class="input-container">
-    <label for="source">Source:</label>
-    <input type="text" id="source" placeholder="Enter source location">
+    <label for="source" class="label2" > SOURCE </label>
+    <input type="text" id="source" class="textbox2" placeholder="Enter source location">
     </div>
+
     <div class="input-container">
-    <label for="destination">Destination:</label>
-    <input type="text" id="destination" placeholder="Enter destination location">
+    <label for="destination"  class="label2">DESTINATION</label>
+    <input type="text" id="destination" class="textbox2"  placeholder="Enter destination location">
     </div>
     <div class="input-container">
         <label for="dropdown">Choose the elevation type:</label>
@@ -90,7 +198,7 @@
        Path Limit
        <input type="range" id="scale" name="scale" min="0" max="100" value="50">
     </div>
-    <button onclick="showMap()">Go</button>
+    <button class="submit-btn" onclick="showMap()">Go</button>
     </div>
 </div>
 
