@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Beautiful Container with Text Boxes</title>
+    <title>Source Location with Google Places Autocomplete</title>
     <style>
         .container {
             width: 500px;
@@ -12,34 +12,34 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
-        .textbox-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .label {
-            font-size: 18px;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
         .textbox {
-            flex-grow: 1;
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
         }
     </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAebd8LBGpJ1X9E6seWFbETQ7ZvpzN31Hg
+&libraries=places"></script>
+    <script>
+        function initAutocomplete() {
+            var input = document.getElementById('source');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+        }
+    </script>
 </head>
 <body>
 <div class="container">
-    <div class="textbox-container">
-        <label for="textbox1" class="label">Text Box 1</label>
-        <input type="text" id="textbox1" class="textbox" placeholder="Enter Text Box 1">
-    </div>
+    <label for="source">Source Location</label>
+    <input type="text" id="source" class="textbox" placeholder="Enter Source Location">
+</div>
 
-    <div class="textbox-container">
-        <label for="textbox2" class="label">Text Box 2</label>
-        <input type="text" id="textbox
+<script>
+        initAutocomplete();
+    </script>
+</body>
+</html>
