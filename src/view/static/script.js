@@ -84,7 +84,6 @@ function initMap() {
                 map: map,
                 title: 'Source'
               });
-
               destinationMarker = new google.maps.Marker({
                 position: destinationLatLng,
                 map: map,

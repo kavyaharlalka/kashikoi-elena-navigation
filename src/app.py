@@ -4,7 +4,7 @@ from flask import Flask, render_template
 from routes.main_blueprint import main_bp
 import config
 
-app = Flask(__name__, template_folder=config.TEMPLATES_DIR)
+app = Flask(__name__, template_folder=config.TEMPLATES_DIR, static_folder=config.STATIC_DIR)
 app.config.from_object(__name__)
 # app.config.from_object('config')
 # db.init_app(app)

@@ -3,10 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>Elena</title>
-    <script type="text/javascript" src="../js/index2.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAebd8LBGpJ1X9E6seWFbETQ7ZvpzN31Hg&libraries=places"></script>
     <style>
-
       .radio-group label {
         display: inline-block;
         margin-right: 10px;
@@ -34,7 +33,7 @@
 
        .outer-container {
        height: 400px;
-       background-image: url('../images/back.png');
+       background-image: url('/static/images/back2.png');
          /* Set the background color #e84003ab; */
        width: 50%; /* Set the width to 50% of the viewport width */
        float: left; /* Position the container on the left side */
@@ -163,7 +162,7 @@
 <body>
 
 <div class="header">
-    <img src="../images/banner2.png" alt="Logo">
+    <img src="{{ url_for('static', filename='/images/banner2.png') }}" alt="Logo">
     <div class="text-overlay">Elena</div>
     <div class="text-overlay2">find you journey ...</div>
 </div>
