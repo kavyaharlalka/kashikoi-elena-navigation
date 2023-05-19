@@ -45,7 +45,7 @@ function initMap() {
 
     // Show the map with the source and destination markers
 
-  function showMap() {
+  function showMap2() {
  var sourceInput = document.getElementById('source').value;
       var destinationInput = document.getElementById('destination').value;
 
@@ -103,3 +103,79 @@ function initMap() {
         }
       });
     }
+
+    function showMap(){
+            var short_path;
+            var coord_path;
+            var validation=true
+
+            if(validation == true) {
+
+            const url = '/test/getroute';
+            const data = {
+                                   source: document.getElementById("source").value,
+                                   destination: document.getElementById("destination").value,
+                                   algorithm: document.getElementById("algorithm").value,
+                                   minimize_elevation_gain: document.getElementById("minimize_elevation_gain").value,
+                                   path_percentage: document.getElementById("path_percentage").value
+                                 };
+
+            fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+            })
+              .then(response => response.json())
+              .then(data => {
+                // Handle the response data
+                console.log(data);
+              })
+              .catch(error => {
+                // Handle any errors
+                console.error('Error:', error);
+              });
+
+
+        }
+        }
+
+
+    // Create a function to plot the distance on Google Maps
+    function plotDistanceOnMap(coordPath) {
+      // Create a new map instance
+    /*
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: coordPath[0] // Set the center of the map to the starting point
+      });
+    */
+
+      // Create an array to store the LatLng objects for the path
+      var pathCoords = [];
+
+      // Iterate through the coordinate path and create LatLng objects
+      for (var i = 0; i < coordPath.length; i++) {
+        var latLng = new google.maps.LatLng(coordPath[i].latitude, coordPath[i].longitude);
+        pathCoords.push(latLng);
+      }
+
+      // Create a polyline to represent the path
+      var path = new google.maps.Polyline({
+        path: pathCoords,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+        map: map
+      });
+
+      // Fit the map bounds to the path
+      var bounds = new google.maps.LatLngBounds();
+      for (var i = 0; i < pathCoords.length; i++) {
+        bounds.extend(pathCoords[i]);
+      }
+      map.fitBounds(bounds);
+    }
+

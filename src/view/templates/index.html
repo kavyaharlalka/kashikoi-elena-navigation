@@ -170,42 +170,37 @@
 <div class="main-container">
 <!-- Source and Destination Input -->
 <div class="outer-container">
-
     <div class="input-container">
-    <label for="source" class="label2" > SOURCE </label>
-    <input type="text" id="source" class="textbox2" placeholder="Enter source location">
+        <label for="source" class="label2" > SOURCE </label>
+        <input type="text" id="source" class="textbox2" placeholder="Enter source location">
     </div>
 
     <div class="input-container">
-    <label for="destination"  class="label2">DESTINATION</label>
-    <input type="text" id="destination" class="textbox2"  placeholder="Enter destination location">
+        <label for="destination"  class="label2">DESTINATION</label>
+        <input type="text" id="destination" class="textbox2"  placeholder="Enter destination location">
     </div>
     <div class="input-container">
-        <label for="dropdown">Choose the elevation type:</label>
-        <select id="dropdown">
-            <option value="option1">Maximum</option>
-            <option value="option2">Minimum</option>
+        <label for="minimize_elevation_gain">Choose the elevation type:</label>
+        <select id="minimize_elevation_gain">
+            <option value="0">Maximum</option>
+            <option value="1">Minimum</option>
         </select>
     </div>
     <div class="input-container">
-    Choose the Algorithm:
-        <div class="radio-group">
-    <label for="A*">
-        <input type="radio" id="A*" name="options" value="A*"> A*
-    </label>
-    <br>
-    <label for="Djsktra">
-        <input type="radio" id="Djsktra" name="options" value="Djsktra"> Option 2
-    </label>
+        <label for="algorithm">Choose the elevation type:</label>
+        <select id="algorithm">
+            <option value="A*">A*</option>
+            <option value="Dijkstra">Dijkstra</option>
+        </select>
     </div>
-    </div>
-   <div class="input-container">
-       Path Limit
-       <input type="range" id="scale" name="scale" min="0" max="100" value="50">
+    <div class="input-container">
+        Path Limit
+        <input type="range" id="path_percentage" name="scale" min="0" max="100" value="50">
     </div>
     <button class="submit-btn" onclick="showMap()">Go</button>
-    </div>
 </div>
+</div>
+
 
 
 <!-- Map container -->
