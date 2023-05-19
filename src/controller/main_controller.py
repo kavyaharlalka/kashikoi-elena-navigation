@@ -1,6 +1,6 @@
 from flask import render_template, request
 import controller.route_manager as route_manager
-import api.google_maps_client as gmap_client
+import controller.api.google_maps_client as gmap_client
 import osmnx as ox
 
 def home():
