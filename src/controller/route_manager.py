@@ -24,7 +24,7 @@ def get_shortest_path(graph, start, end, path_percentage, minimize_elevation_gai
             return None  # Ignore paths that exceed the max_distance
 
         # You can customize how elevation gain is prioritized (minimized or maximized)
-        return 1.0/elevation_gain if minimize_elevation_gain != 0 else 0
+        return 1.0/elevation_gain if (not minimize_elevation_gain and not elevation_gain == 0) else elevation_gain
 
     short_path = networkx.dijkstra_path(nx_graph, source=start, target=end, weight=custom_weight_func)
     coord_path = get_coordinates_from_nodes(graph, short_path)
