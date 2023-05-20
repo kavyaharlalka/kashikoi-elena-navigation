@@ -1,45 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Source Location with Google Places Autocomplete</title>
     <style>
-        .container {
-            width: 500px;
+        .outer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            background-color: #f1f1f1;
+        }
+
+        .inner-container {
             padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
-
-        .textbox {
-            display: block;
-            margin-bottom: 10px;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAebd8LBGpJ1X9E6seWFbETQ7ZvpzN31Hg
-&libraries=places"></script>
-    <script>
-        function initAutocomplete() {
-            var input = document.getElementById('source');
-            var autocomplete = new google.maps.places.Autocomplete(input);
-        }
-    </script>
 </head>
 <body>
-<div class="container">
-    <label for="source">Source Location</label>
-    <input type="text" id="source" class="textbox" placeholder="Enter Source Location">
+<div class="outer-container">
+    <div class="inner-container">
+        <!-- Content of the inner container -->
+        <h1>This is the inner container</h1>
+        <p>Centered horizontally and vertically</p>
+    </div>
 </div>
-
-<script>
-        initAutocomplete();
-    </script>
 </body>
 </html>

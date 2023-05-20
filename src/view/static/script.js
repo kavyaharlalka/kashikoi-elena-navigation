@@ -28,18 +28,6 @@ function initMap() {
       var destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput);
       destinationAutocomplete.bindTo('bounds', map);
 
-
-            // Event listener for source input change
-      sourceInput.addEventListener('change', function() {
-        showMap();
-      });
-
-      // Event listener for destination input change
-      destinationInput.addEventListener('change', function() {
-        showMap();
-      });
-
-
 }
       // Initialize the map
 

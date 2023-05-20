@@ -39,20 +39,20 @@
        float: left; /* Position the container on the left side */
         justify-content: center;
         align-items: center;
+
       }
 
        .inner-container {
-        padding: 70px;
+        padding: 40px;
          width: 500px;
-           padding: 20px;
             background-color: rgba(241, 241, 241, 0.1);
             /*#f1f1f1;*/
             border-radius: 10px;
             margin: 0 auto;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-             display: flex;
             align-items: center;
             margin-bottom: 10px;
+            margin-top: 30px;
       }
 
        .submit-btn {
@@ -107,15 +107,6 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
 
-            .label {
-            display: block;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-
                 .textbox {
             display: block;
             flex-grow: 1;
@@ -128,10 +119,14 @@
             box-sizing: border-box;
         }
 
-      .label2 {
+      .label {
             font-size: 18px;
             font-weight: bold;
             margin-right: 10px;
+            font-family:monospace;
+            border-color:#45a049;
+            border-style:solid;
+            color:#5a8153;
             }
         .textbox2{
                 flex-grow: 1;
@@ -170,34 +165,40 @@
 <div class="main-container">
 <!-- Source and Destination Input -->
 <div class="outer-container">
+    <div class="inner-container">
     <div class="input-container">
-        <label for="source" class="label2" > SOURCE </label>
-        <input type="text" id="source" class="textbox2" placeholder="Enter source location">
+        <label for="source" class="label" > Source </label>
+        <input type="text" id="source" class="textbox2" placeholder="Enter location">
     </div>
 
     <div class="input-container">
-        <label for="destination"  class="label2">DESTINATION</label>
-        <input type="text" id="destination" class="textbox2"  placeholder="Enter destination location">
+        <label for="destination"  class="label">Destination</label>
+        <input type="text" id="destination" class="textbox2"  placeholder="Enter location">
     </div>
     <div class="input-container">
-        <label for="minimize_elevation_gain">Choose the elevation type:</label>
-        <select id="minimize_elevation_gain">
+        <label for="minimize_elevation_gain" class="label">Choose the elevation type:</label>
+        <select id="minimize_elevation_gain" class="textbox2" >
             <option value="0">Maximum</option>
             <option value="1">Minimum</option>
         </select>
     </div>
     <div class="input-container">
-        <label for="algorithm">Choose the elevation type:</label>
-        <select id="algorithm">
-            <option value="A*">A*</option>
-            <option value="Dijkstra">Dijkstra</option>
+        <label for="algorithm" class="label">Choose the elevation type:</label>
+        <select id="algorithm" class="textbox2" >
+            <option value="0">Dijkstra</option>
+            <option value="1">Bidirectional Dijkstra</option>
+            <option value="0">A*</option>
+            <option value="0">Bellman-Ford</option>
+            <option value="0">Goldberg-Radzik</option>
+            <option value="0">Floyd-Marshall</option>
         </select>
     </div>
     <div class="input-container">
-        Path Limit
-        <input type="range" id="path_percentage" name="scale" min="0" max="100" value="50">
+        <label for="path_percentage" class="label">Path Limit</label>
+        <input type="range" id="path_percentage" class="textbox2"  name="scale" min="0" max="100" value="50">
     </div>
     <button class="submit-btn" onclick="showMap()">Go</button>
+</div>
 </div>
 </div>
 
