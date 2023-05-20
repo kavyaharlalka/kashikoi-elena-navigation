@@ -159,6 +159,9 @@
 </div>
 
 <div class="main-container">
+    <div class="input-container">
+        <a href="/help">Click here for Help</a>
+    </div>
 <!-- Source and Destination Input -->
 <div class="outer-container">
     <div class="inner-container">
@@ -183,17 +186,20 @@
         <select id="algorithm" class="textbox2" >
             <option value="0">Dijkstra</option>
             <option value="1">Bidirectional Dijkstra</option>
-            <option value="0">A*</option>
-            <option value="0">Bellman-Ford</option>
-            <option value="0">Goldberg-Radzik</option>
-            <option value="0">Floyd-Marshall</option>
+            <option value="2">A*</option>
+            <option value="3">Bellman-Ford</option>
+            <option value="4">Goldberg-Radzik</option>
+            <option value="5">Floyd-Marshall</option>
         </select>
     </div>
+
     <div class="input-container">
         <label for="path_percentage" class="label">Path Limit</label>
         <input type="range" id="path_percentage" class="textbox2"  name="scale" min="0" max="100" value="50">
     </div>
+        <div class="input-container">
     <button class="submit-btn" onclick="showMap()">Go</button>
+        </div>
 </div>
 </div>
 </div>
