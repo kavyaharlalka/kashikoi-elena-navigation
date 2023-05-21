@@ -14,13 +14,13 @@ class Algorithms(Enum):
     ASTAR = 2
     BELLMANFORD = 3
     GOLDBERG_RADZIK = 4
-    FLOYD_MARSHALL = 5
+    FLOYD_WARSHALL = 5
 
 def get_coordinates_from_nodes(graph, nodes_to_convert):
     return [(graph.nodes[node][COORDINATE_Y], graph.nodes[node][COORDINATE_X]) for node in nodes_to_convert]
 
 def get_shortest_path(algorithm_id, graph, start, end, path_percentage, minimize_elevation_gain: bool):
-    # algorithms = ["Dijkstra", "Bidirectional Dijkstra", "A *", "Bellman - Ford", "Goldberg - Radzik", "Johnson", "Floyd - Marshall"]
+    # algorithms = ["Dijkstra", "Bidirectional Dijkstra", "A *", "Bellman - Ford", "Goldberg - Radzik", "Johnson", "Floyd - Warshall"]
     assert algorithm_id in [e.value for e in Algorithms], "Invalid Algorithm ID"
     assert graph is not None, "Invalid Location"
     assert start is not None, "Invalid Source"
@@ -65,8 +65,8 @@ def get_shortest_path(algorithm_id, graph, start, end, path_percentage, minimize
             predecessors, distances = networkx.goldberg_radzik(networkx.DiGraph(graph), start, weight=custom_weight_func)
             while short_path[-1] != start:
                 short_path.append(predecessors[short_path[-1]])
-    # Floyd-Marshall
-    elif algorithm_id == Algorithms.FLOYD_MARSHALL.value:
+    # Floyd-Warshall
+    elif algorithm_id == Algorithms.FLOYD_WARSHALL.value:
         short_path = [end]
         if not start == end:
             predecessors, distance = networkx.floyd_warshall_predecessor_and_distance(nx_graph, weight=custom_weight_func)
