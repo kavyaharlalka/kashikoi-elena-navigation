@@ -7,3 +7,11 @@ REQUEST_JSON_TRANSPORTATION_MODE_KEY = 'transportation_mode'
 
 COORDINATES_LATITUDE = 'lat'
 COORDINATES_LONGITUDE = 'lng'
+
+COORDINATES_X = 'x'
+COORDINATES_Y = 'y'
+
+TRANSPORTATION_MODES = {0: 'bike', 1: 'walk'}
+ELEVATION_MODES = ["gain", "drop", "vanilla"]
+
+KEY_ELEVATION = 'elevation'
