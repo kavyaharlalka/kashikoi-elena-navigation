@@ -12,20 +12,7 @@ var line;
 
 // Initialize the map
 function initMap() {
-
-           map = new google.maps.Map(document.getElementById('map'), {
-             center: {lat: 42.4047084, lng: -72.5289678},
-             zoom: 12
-           });
-
-           directionsService = new google.maps.DirectionsService();
-           directionsRenderer = new google.maps.DirectionsRenderer({
-             map: map
-           });
-
-
-             bounds = new google.maps.LatLngBounds();
-
+      reset();
         // Autocomplete for source input
       var sourceInput = document.getElementById('source');
       var sourceAutocomplete = new google.maps.places.Autocomplete(sourceInput);
@@ -37,11 +24,9 @@ function initMap() {
       destinationAutocomplete.bindTo('bounds', map);
 
 }
-      // Initialize the map
 
-    // Show the map with the source and destination markers
-
-  function showMap2() {
+ // Show the map with the source and destination markers using line matching bw src and dest
+ function showMap2() {
  var sourceInput = document.getElementById('source').value;
       var destinationInput = document.getElementById('destination').value;
 
@@ -100,15 +85,29 @@ function initMap() {
       });
     }
 
+
+var url = 'your_api_endpoint';
+var data = {
+  // Your request data
+};
+
     function showMap(){
             var short_path;
             var coord_path;
             var validation=true
 
             if(validation == true) {
+var timeoutMilliseconds = 30000; // Set the timeout value in milliseconds (e.g., 10 seconds)
 
-            const url = '/getroute';
-            const data = {
+// Create a timeout promise that will reject after the specified timeout duration
+var timeoutPromise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject(new Error('The request took too long. Please try again later.'));
+  }, timeoutMilliseconds);
+});
+
+ const url = '/getroute';
+ const data = {
                            source: document.getElementById("source").value,
                            destination: document.getElementById("destination").value,
                            algorithm_id: parseInt(document.getElementById("algorithm").value),
@@ -117,34 +116,54 @@ function initMap() {
                            transportation_mode: parseInt(document.getElementById("transportation_mode").value)
                          };
 
-            fetch(url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(data)
-            })
-              .then(response => response.json())
-              .then(data=> {
-                // Handle the response data
-                console.log(data);
+// Make the API call and race it against the timeout promise
+Promise.race([
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }),
+  timeoutPromise
+])
+  .then(response => {
+    // Check if the response is the timeout error
+    if (response instanceof Error) {
+      throw response; // Propagate the timeout error
+    }
+    return response.json();
+  })
+  .then(data => {
+
+               console.log(data);
 
                showPathOnMap(data["best_path_route"], data["shortest_path_distance"],  data["shortest_path_gain"],data["best_path_distance"], data["best_path_gain"],
                parseInt(document.getElementById("transportation_mode").value))
-              })
-              .catch(error => {
-                // Handle any errors
-                console.error('Error:', error);
-              });
 
+  })
+  .catch(error => {
 
-        }
-        }
+    // Handle the timeout error and other catchable errors
+    if(error.message=="The request took too long. Please try again later.")
+    {
+    alert(error.message)
+    }
+    else{
+         alert("Implementation for this request doesn't exist. Try again with a different configuration!")
+                    console.error('Error:', error);
+         }
 
-        function showPathOnMap( route_path, distance, gainShort, elenavDist, gainElenav, transportation_mode) {
-         resetMap();
+  });
+  }}
+
+      function showPathOnMap( route_path, distance, gainShort, elenavDist, gainElenav, transportation_mode) {
+         reset();
+         var MAX_WAYPOINTS = 25; // Maximum number of waypoints allowed
          var waypoints = [];
-         for (var i = 0; i < route_path.length; i++) {
+         var numWaypoints = route_path.length;
+         var step = Math.ceil(numWaypoints / MAX_WAYPOINTS);
+         for (var i = 0; i < numWaypoints; i += step) {
            var latLng = new google.maps.LatLng(route_path[i][0], route_path[i][1]);
            waypoints.push({
              location: latLng,
@@ -169,64 +188,46 @@ function initMap() {
          directionsService.route(request, function(response, status) {
            if (status === google.maps.DirectionsStatus.OK) {
              directionsRenderer.setDirections(response);
-
              // Fit the map to the bounds of the route
              map.fitBounds(bounds);
-           } else {
-             console.error('Directions request failed: ' + status);
-           }
+             if(numWaypoints>25)
+             {
+             alert("We have shown an approximated path as the maximum number of waypoints has been exceeded ")
+             }
+
+           }  else if (status === google.maps.DirectionsStatus.NOT_FOUND) {
+                  alert('Directions not found. Please check the provided locations.');
+                } else if (status === google.maps.DirectionsStatus.ZERO_RESULTS) {
+                  alert('No route could be found between the provided locations.');
+                } else if (status === google.maps.DirectionsStatus.MAX_WAYPOINTS_EXCEEDED) {
+                  alert('The maximum number of waypoints has been exceeded.');
+                } else if (status === google.maps.DirectionsStatus.INVALID_REQUEST) {
+                  alert('Invalid request. Please check the provided directions request.');
+                } else if (status === google.maps.DirectionsStatus.OVER_QUERY_LIMIT) {
+                  alert('The page has exceeded its query limit for the Directions API.');
+                } else if (status === google.maps.DirectionsStatus.REQUEST_DENIED) {
+                  alert('The page is not allowed to use the Directions API.');
+                } else if (status === google.maps.DirectionsStatus.UNKNOWN_ERROR) {
+                  alert('An unknown error occurred while requesting directions.');
+                } else {
+                  alert('An error occurred with the Directions API.');
+                   console.error('Directions request failed: ' + status);
+                }
          });
         }
 
-        function resetMap() {
-          // Clear the directions
-          directionsRenderer.setDirections(null);
-
-          // Reset the bounds
+        function reset() {
+           map = new google.maps.Map(document.getElementById('map'), {
+             center: {lat: 42.4047084, lng: -72.5289678},
+             zoom: 12
+           });
+           directionsService = new google.maps.DirectionsService();
+           directionsRenderer = new google.maps.DirectionsRenderer({
+             map: map
+           });
           bounds = new google.maps.LatLngBounds();
-
-          // Fit the map to the empty bounds
-          map.fitBounds(bounds);
         }
 
-        // Call the resetMap function when needed
 
 
-
-    // Create a function to plot the distance on Google Maps
-    function plotDistanceOnMap(coordPath) {
-      // Create a new map instance
-    /*
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: coordPath[0] // Set the center of the map to the starting point
-      });
-    */
-
-      // Create an array to store the LatLng objects for the path
-      var pathCoords = [];
-
-      // Iterate through the coordinate path and create LatLng objects
-      for (var i = 0; i < coordPath.length; i++) {
-        var latLng = new google.maps.LatLng(coordPath[i].latitude, coordPath[i].longitude);
-        pathCoords.push(latLng);
-      }
-
-      // Create a polyline to represent the path
-      var path = new google.maps.Polyline({
-        path: pathCoords,
-        geodesic: true,
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
-        map: map
-      });
-
-      // Fit the map bounds to the path
-      var bounds = new google.maps.LatLngBounds();
-      for (var i = 0; i < pathCoords.length; i++) {
-        bounds.extend(pathCoords[i]);
-      }
-      map.fitBounds(bounds);
-    }
 
