@@ -14,8 +14,7 @@ class Algorithms(Enum):
     ASTAR = 2
     BELLMANFORD = 3
     GOLDBERG_RADZIK = 4
-    JOHNSON = 5
-    FLOYD_MARSHALL = 6
+    FLOYD_MARSHALL = 5
 
 def get_coordinates_from_nodes(graph, nodes_to_convert):
     return [(graph.nodes[node][COORDINATE_Y], graph.nodes[node][COORDINATE_X]) for node in nodes_to_convert]
@@ -66,9 +65,6 @@ def get_shortest_path(algorithm_id, graph, start, end, path_percentage, minimize
             predecessors, distances = networkx.goldberg_radzik(networkx.DiGraph(graph), start, weight=custom_weight_func)
             while short_path[-1] != start:
                 short_path.append(predecessors[short_path[-1]])
-    # Johnson
-    elif algorithm_id == Algorithms.JOHNSON.value:
-        short_path = networkx.johnson(nx_graph, weight='length')
     # Floyd-Marshall
     elif algorithm_id == Algorithms.FLOYD_MARSHALL.value:
         predecessors, distance = networkx.floyd_warshall_predecessor_and_distance(nx_graph, weight=custom_weight_func)
@@ -82,15 +78,13 @@ def create_graph(location, distance, transportation_mode):
     assert location is not None, "Invalid Location"
     assert distance is not None, "Invalid Distance"
     assert transportation_mode in TRANSPORTATION_MODE, "Invalid Transportation Mode"
-    # if location_type == "address":
+
     return ox.graph_from_address(location, dist=distance, network_type=TRANSPORTATION_MODE[transportation_mode])
-    # elif location_type == "points":
-    #     return ox.graph_from_point(location, distance=distance, network_type=transportation_mode)
-    # return None
 
 
 def populate_graph(graph):
     assert graph is not None, "Invalid Location"
+
     graph = ox.add_node_elevations_google(graph, api_key=GMAP_API_KEY)
     graph = ox.add_edge_grades(graph)
     return graph
@@ -101,6 +95,8 @@ def cost_function(path_length, gradient):
 
 # add cost function to graph
 def modify_graph_elevate(graph):
+    assert graph is not None, "Invalid Location"
+
     for _, __, ___, data in graph.edges(keys=True, data=True):
         data['impedance'] = -cost_function(data['length'], data['grade'])
         data['rise'] = data['length'] * data['grade']
