@@ -16,7 +16,7 @@ def getroute():
 
     # try:
     data = request.get_json(force=True)
-    graph = route_manager.create_graph("University of Massachusetts Amherst", dist=700)
+    graph = route_manager.create_graph("University of Massachusetts Amherst", 700)
     graph = route_manager.populate_graph(graph)
     graph = route_manager.modify_graph_elevate(graph)
     source_coordinates = gmap_client.get_coordinates(data[constants.REQUEST_JSON_SOURCE_KEY])
