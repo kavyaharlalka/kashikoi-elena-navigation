@@ -6,6 +6,7 @@ from enum import Enum
 COORDINATE_X = 'x'
 COORDINATE_Y = 'y'
 
+TRANSPORTATION_MODE = {0: 'bike', 1: 'walk'}
 
 class Algorithms(Enum):
     DIJKSTRA = 0
@@ -77,12 +78,12 @@ def get_shortest_path(algorithm_id, graph, start, end, path_percentage, minimize
     return {"nodes": short_path, "coordinates": coord_path}
 
 
-def create_graph(location, distance, transportation_mode='walk'):
+def create_graph(location, distance, transportation_mode):
     assert location is not None, "Invalid Location"
     assert distance is not None, "Invalid Distance"
-    assert transportation_mode in ['walk', 'bike'], "Invalid Transportation Mode"
+    assert transportation_mode in TRANSPORTATION_MODE, "Invalid Transportation Mode"
     # if location_type == "address":
-    return ox.graph_from_address(location, dist=distance, network_type=transportation_mode)
+    return ox.graph_from_address(location, dist=distance, network_type=TRANSPORTATION_MODE[transportation_mode])
     # elif location_type == "points":
     #     return ox.graph_from_point(location, distance=distance, network_type=transportation_mode)
     # return None
@@ -96,11 +97,11 @@ def populate_graph(graph):
 
 def cost_function(path_length, gradient):
     penalty_term = gradient ** 2
-    return (path_length *penalty_term)**2
+    return (path_length * penalty_term) ** 2
 
 # add cost function to graph
 def modify_graph_elevate(graph):
-    for _,__,___, data in graph.edges(keys=True, data=True):
+    for _, __, ___, data in graph.edges(keys=True, data=True):
         data['impedance'] = -cost_function(data['length'], data['grade'])
         data['rise'] = data['length'] * data['grade']
     return graph
