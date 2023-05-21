@@ -6,6 +6,33 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAebd8LBGpJ1X9E6seWFbETQ7ZvpzN31Hg&libraries=places"></script>
     <style>
+        <style>
+    ul {
+
+ list-style-type: none;
+      overflow: hidden;
+      background-color: #f1f1f1;
+    }
+
+    li {
+     list-style-type: none;
+      float: left;
+    }
+
+    li a {
+      display: block;
+      color: #000;
+      padding: 20px 20px;
+      padding-bottom:40px;
+      text-decoration: none;
+      font-size:25px;
+      font-family:monospace;
+    }
+
+    li a:hover {
+      background-color: #ddd;
+    }
+
       .radio-group label {
         display: inline-block;
         margin-right: 10px;
@@ -16,15 +43,14 @@
          width: 50%;
          float: right;
       }
-       .header {
-        height: 80vh; /* Set the height to 25% of the viewport height */
-      }
+
 
    .header img {
      width: 100%;
      height: 100%; /* Make the image fill the entire height of the container */
      object-fit: cover;
      transform: scale(1);
+     margin-top:50px;
     }
 
           .input-container {
@@ -91,6 +117,7 @@
             font-style:italic;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
         }
 
 
@@ -106,6 +133,21 @@
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
+
+
+                .text-overlay3 {
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #23864f;
+            font-weight: bold;
+            background-color:turquoise;
+            width :100%
+
+        }
+
 
                 .textbox {
             display: block;
@@ -151,17 +193,19 @@
 </script>-->
 
 <body>
-
+<div class="text-overlay3">
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/help">Help</a></li>
+    </ul>
+</div>
 <div class="header">
     <img src="{{ url_for('static', filename='/images/banner2.png') }}" alt="Logo">
     <div class="text-overlay">Elena</div>
     <div class="text-overlay2">find you journey ...</div>
 </div>
 
-<div class="main-container">
-    <div class="input-container">
-        <a href="/help">Click here for Help</a>
-    </div>
 <!-- Source and Destination Input -->
 <div class="outer-container">
     <div class="inner-container">

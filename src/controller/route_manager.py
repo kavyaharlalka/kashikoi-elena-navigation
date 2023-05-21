@@ -55,3 +55,4 @@ def modify_graph_elevate(graph):
         data['impedance'] = -cost_function(data['length'], data['grade'])
         data['rise'] = data['length'] * data['grade']
     return graph
+
