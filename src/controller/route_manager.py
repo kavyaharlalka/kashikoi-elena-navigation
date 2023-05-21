@@ -3,14 +3,10 @@ import numpy as np
 import osmnx as ox
 from config import GMAP_API_KEY
 from enum import Enum
-import pickle as p
+import pickle
 import os
+import controller.helpers.constants as constants
 
-
-COORDINATE_X = 'x'
-COORDINATE_Y = 'y'
-
-TRANSPORTATION_MODE = {0: 'bike', 1: 'walk'}
 
 class Algorithms(Enum):
     DIJKSTRA = 0
@@ -21,7 +17,7 @@ class Algorithms(Enum):
     FLOYD_WARSHALL = 5
 
 def get_coordinates_from_nodes(graph, nodes_to_convert):
-    return [(graph.nodes[node][COORDINATE_Y], graph.nodes[node][COORDINATE_X]) for node in nodes_to_convert]
+    return [(graph.nodes[node][constants.COORDINATES_Y], graph.nodes[node][constants.COORDINATES_X]) for node in nodes_to_convert]
 
 def get_shortest_path(algorithm_id, graph, start, end, path_percentage, minimize_elevation_gain: bool):
     # algorithms = ["Dijkstra", "Bidirectional Dijkstra", "A *", "Bellman - Ford", "Goldberg - Radzik", "Johnson", "Floyd - Warshall"]
@@ -83,100 +79,102 @@ def get_shortest_path(algorithm_id, graph, start, end, path_percentage, minimize
 def create_graph(location, distance, transportation_mode):
     assert location is not None, "Invalid Location"
     assert distance is not None, "Invalid Distance"
-    assert transportation_mode in TRANSPORTATION_MODE, "Invalid Transportation Mode"
+    assert transportation_mode in constants.TRANSPORTATION_MODES, "Invalid Transportation Mode"
 
-    return ox.graph_from_address(location, dist=distance, network_type=TRANSPORTATION_MODE[transportation_mode])
+    return ox.graph_from_address(location, dist=distance, network_type=constants.TRANSPORTATION_MODES[transportation_mode])
 
-def getGraphOject(start_location, end_location, transportation_mode):
-    assert start_location is not None, "Invalid Location"
-    assert end_location is not None, "Invalid Distance"
-    assert transportation_mode in TRANSPORTATION_MODE, "Invalid Transportation Mode"
 
-    if os.path.exists("./graph.p"):
-        G = p.load(open("graph.p", "rb"))
-        print("Found Existing Graph")
+def get_map_graph(source, destination, transportation_mode):
+    assert source is not None, "Invalid Location"
+    assert destination is not None, "Invalid Distance"
+    assert transportation_mode in constants.TRANSPORTATION_MODES, "Invalid Transportation Mode"
+
+    transportation_mode_str = constants.TRANSPORTATION_MODES[transportation_mode]
+    cached_graph_file_name = f"./graph_{transportation_mode_str}.p"
+    if os.path.exists(cached_graph_file_name):
+        print("Loading cached graph")
+        map_graph = pickle.load(open(cached_graph_file_name, "rb"))
     else:
-        print("Did not find existing Graph. Downloading !!!!")
-        G = ox.graph_from_point(start_location, dist=30000, dist_type="network", network_type=TRANSPORTATION_MODE[transportation_mode])
-        G = ox.elevation.add_node_elevations_google(G, api_key=GMAP_API_KEY)
-        p.dump(G, open("graph.p", "wb"))
-        print("Saved Graph !!!!")
+        print("Cached graph not found. Downloading and caching, please wait")
+        map_graph = ox.graph_from_point(source, dist=30000, dist_type="network", network_type=transportation_mode_str)
+        map_graph = ox.elevation.add_node_elevations_google(map_graph, api_key=GMAP_API_KEY)
+        pickle.dump(map_graph, open(cached_graph_file_name, "wb"))
+        print("Download complete")
 
-    end_node = ox.distance.nearest_nodes(G, end_location[1], end_location[0], return_dist=False)
-    end_location = G.nodes[end_node]
-    lat1 = end_location['y']
-    lon1 = end_location['x']
-    for node, data in G.nodes(data=True):
-        lat2 = G.nodes[node]['y']
-        lon2 = G.nodes[node]['x']
-        data['distFromDest'] = calculate_spherical_distance(lat1, lon1, lat2, lon2)
-    return G
+    end_node = ox.nearest_nodes(map_graph, destination[1], destination[0], return_dist=False)
+    end_location = map_graph.nodes[end_node]
+    latitude_1 = end_location[constants.COORDINATES_Y]
+    longitude_1 = end_location[constants.COORDINATES_X]
+    for node, data in map_graph.nodes(data=True):
+        latitude_2 = map_graph.nodes[node][constants.COORDINATES_Y]
+        longitude_2 = map_graph.nodes[node][constants.COORDINATES_X]
+        data['distance_from_destination'] = get_distance_from_destination(latitude_1, longitude_1, latitude_2, longitude_2)
+    return map_graph
 
-def calculate_spherical_distance(lat1, lon1, lat2, lon2, r=6371008.8):
+
+def get_distance_from_destination(latitude_1, longitude_1, latitude_2, longitude_2, multiplier=6371008.8):
     # Convert degrees to radians
-    coordinates = lat1, lon1, lat2, lon2
-    # radians(c) is same as c*pi/180
-    phi1, lambda1, phi2, lambda2 = [
+    coordinates = latitude_1, longitude_1, latitude_2, longitude_2
+    phi_1, lambda_1, phi_2, lambda_2 = [
         np.radians(c) for c in coordinates
     ]
-    # Apply the haversine formula
-    a = (np.square(np.sin((phi2 - phi1) / 2)) + np.cos(phi1) * np.cos(phi2) *
-         np.square(np.sin((lambda2 - lambda1) / 2)))
-    d = 2 * r * np.arcsin(np.sqrt(a))
-    return d
 
-def getElevation(G, route, mode, pairFlag = False):
+    # Haversine formula
+    haversine_result = (np.square(np.sin((phi_2 - phi_1) / 2)) + np.cos(phi_1) * np.cos(phi_2) *
+                        np.square(np.sin((lambda_2 - lambda_1) / 2)))
+    distance = 2 * multiplier * np.arcsin(np.sqrt(haversine_result))
+
+    return distance
+
+
+def calculate_and_get_elevation(graph, path_nodes, elevation_mode, return_individual_costs = False):
     """ Computes the cost of a route which is the elevation of the route.
     Parameters:
-        route -> List of Node IDs
-        mode -> mode of elevation
-        pairFlag -> boolean to indicate if individual cost between the nodes needs to be returned
+        path_nodes -> Array of Node IDs
+        elevation_mode -> Mode of elevation
+        return_individual_costs -> If true, returns individual Costs of nodes as well
     Returns:
-        total -> total cost of the route
-        pairElevList -> list of individual costs of the route [Optional]
+        total_cost -> total cost
+        individual_costs -> Array of individual costs if return_individual_costs is set to true
     """
-    total = 0
-    if pairFlag : pairElevList = []
-    for i in range(len(route)-1):
-        if mode == "gain":
-            diff = getCost(G, route[i],route[i+1],"gain")
-        elif mode == "vanilla":
-            diff = getCost(G, route[i],route[i+1],"vanilla")
-        else:
-            diff = getCost(G, route[i],route[i+1],"drop")
-        total += diff
-        if pairFlag : pairElevList.append(diff)
-    if pairFlag:
-        return total, pairElevList
-    else:
-        return total
+    assert elevation_mode in constants.ELEVATION_MODES, "Invalid elevation mode"
+
+    total_cost = 0
+    individual_costs = []
+    for i in range(len(path_nodes) - 1):
+        cost_between_nodes = get_cost_between_nodes(graph, path_nodes[i], path_nodes[i + 1], elevation_mode)
+        total_cost += cost_between_nodes
+        individual_costs.append(cost_between_nodes)
+    return (total_cost, individual_costs) if return_individual_costs else total_cost
 
 
-def getCost(G, n1, n2, mode="vanilla"):
+def get_cost_between_nodes(graph, node_1, node_2, elevation_mode="vanilla"):
     """ defines the cost between two nodes """
+    assert node_1 is not None and node_2 is not None, "Invalid node inputs"
+    assert elevation_mode in constants.ELEVATION_MODES, "Invalid elevation mode"
 
-    if n1 is None or n2 is None: return
-    if mode == "gain":
-        return max(0.0, G.nodes[n2]["elevation"] - G.nodes[n1]["elevation"])
-    elif mode == "drop":
-        if G.nodes[n2]["elevation"] - G.nodes[n1]["elevation"] > 0:
+    if elevation_mode == "gain":
+        return max(0.0, graph.nodes[node_2][constants.KEY_ELEVATION] - graph.nodes[node_1][constants.KEY_ELEVATION])
+    elif elevation_mode == "drop":
+        if graph.nodes[node_2][constants.KEY_ELEVATION] - graph.nodes[node_1][constants.KEY_ELEVATION] > 0:
             return 0.0
         else:
-            return G.nodes[n1]["elevation"] - G.nodes[n2]["elevation"]
+            return graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION]
     else:
-        return abs(G.nodes[n1]["elevation"] - G.nodes[n2]["elevation"])
+        return abs(graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION])
 
 
 def populate_graph(graph):
     assert graph is not None, "Invalid Location"
 
-    # graph = ox.add_node_elevations_google(graph, api_key=GMAP_API_KEY)
     graph = ox.add_edge_grades(graph)
     return graph
+
 
 def cost_function(path_length, gradient):
     penalty_term = gradient ** 2
     return (path_length * penalty_term) ** 2
+
 
 # add cost function to graph
 def modify_graph_elevate(graph):

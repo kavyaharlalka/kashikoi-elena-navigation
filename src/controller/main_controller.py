@@ -47,7 +47,7 @@ def get_route():
     try:
         source_coordinates = gmap_client.get_coordinates(data[constants.REQUEST_JSON_SOURCE_KEY])
         destination_coordinates = gmap_client.get_coordinates(data[constants.REQUEST_JSON_DESTINATION_KEY])
-        graph = route_manager.getGraphOject((source_coordinates[constants.COORDINATES_LATITUDE], source_coordinates[constants.COORDINATES_LONGITUDE]),
+        graph = route_manager.get_map_graph((source_coordinates[constants.COORDINATES_LATITUDE], source_coordinates[constants.COORDINATES_LONGITUDE]),
                                             (destination_coordinates[constants.COORDINATES_LATITUDE], destination_coordinates[constants.COORDINATES_LONGITUDE]),
                                             data[constants.REQUEST_JSON_TRANSPORTATION_MODE_KEY])
         # graph = route_manager.populate_graph(graph)
@@ -67,25 +67,25 @@ def get_route():
                                                data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY])
         best_path_algorithm_stats = [best_path_algorithm_result['coordinates'],
                                      sum(ox.utils_graph.get_route_edge_attributes(graph, best_path_algorithm_result['nodes'], 'length')),
-                                     route_manager.getElevation(graph, best_path_algorithm_result['nodes'], "gain"),
-                                     route_manager.getElevation(graph, best_path_algorithm_result['nodes'], "drop")]
+                                     route_manager.calculate_and_get_elevation(graph, best_path_algorithm_result['nodes'], "gain"),
+                                     route_manager.calculate_and_get_elevation(graph, best_path_algorithm_result['nodes'], "drop")]
 
         shortest_path_nodes = ox.distance.shortest_path(graph, orig=source, dest=destination)
         shortest_path_distance = sum(ox.utils_graph.get_route_edge_attributes(graph, shortest_path_nodes, 'length'))
-        shortestPathStats = [route_manager.get_coordinates_from_nodes(graph, shortest_path_nodes),
+        shortest_path_stats = [route_manager.get_coordinates_from_nodes(graph, shortest_path_nodes),
                              shortest_path_distance,
-                             route_manager.getElevation(graph, shortest_path_nodes, "gain"),
-                             route_manager.getElevation(graph, shortest_path_nodes, "drop")]
+                             route_manager.calculate_and_get_elevation(graph, shortest_path_nodes, "gain"),
+                             route_manager.calculate_and_get_elevation(graph, shortest_path_nodes, "drop")]
 
         return {
             "best_path_route": best_path_algorithm_stats[0],
             "best_path_distance": best_path_algorithm_stats[1],
             "best_path_gain": best_path_algorithm_stats[2],
             "best_path_drop": best_path_algorithm_stats[3],
-            "shortest_path_route": shortestPathStats[0],
-            "shortest_path_distance": shortestPathStats[1],
-            "shortest_path_gain": shortestPathStats[2],
-            "shortest_path_drop": shortestPathStats[3]
+            "shortest_path_route": shortest_path_stats[0],
+            "shortest_path_distance": shortest_path_stats[1],
+            "shortest_path_gain": shortest_path_stats[2],
+            "shortest_path_drop": shortest_path_stats[3]
          }
     except Exception as e:
-        abort(e.code, str(e))
+        abort(500, str(e))
