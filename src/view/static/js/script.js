@@ -5,18 +5,26 @@ initMap();
 var map;
 var bounds;
 var sourceMarker;
-var  destinationMarker;
+var destinationMarker;
+var directionsService;
+var directionsRenderer
 var line;
 
 // Initialize the map
 function initMap() {
 
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 37.7749, lng: -122.4194},
-    zoom: 12
-  });
+           map = new google.maps.Map(document.getElementById('map'), {
+             center: {lat: 42.4047084, lng: -72.5289678},
+             zoom: 12
+           });
 
-  bounds = new google.maps.LatLngBounds();
+           directionsService = new google.maps.DirectionsService();
+           directionsRenderer = new google.maps.DirectionsRenderer({
+             map: map
+           });
+
+
+             bounds = new google.maps.LatLngBounds();
 
         // Autocomplete for source input
       var sourceInput = document.getElementById('source');
@@ -121,7 +129,8 @@ function initMap() {
                 // Handle the response data
                 console.log(data);
 
-               showPathOnMap(data["best_path_route"], data["shortest_path_distance"],  data["shortest_path_gain"],data["best_path_distance"], data["best_path_gain"])
+               showPathOnMap(data["best_path_route"], data["shortest_path_distance"],  data["shortest_path_gain"],data["best_path_distance"], data["best_path_gain"],
+               parseInt(document.getElementById("transportation_mode").value))
               })
               .catch(error => {
                 // Handle any errors
@@ -132,34 +141,56 @@ function initMap() {
         }
         }
 
-        function showPathOnMap(path, distance, gainShort, elenavDist, gainElenav) {
-          var source = path[0]
-          var dest = path[path.length-1]
+        function showPathOnMap( route_path, distance, gainShort, elenavDist, gainElenav, transportation_mode) {
+         resetMap();
+         var waypoints = [];
+         for (var i = 0; i < route_path.length; i++) {
+           var latLng = new google.maps.LatLng(route_path[i][0], route_path[i][1]);
+           waypoints.push({
+             location: latLng,
+             stopover: true
+           });
+           bounds.extend(latLng);
+         }
 
-          path_points = []
-          for (let i = 3; i < path.length-3; i++){
-            var lat = path[i][0];
-            var long= path[i][1];
-            path_points.push({
-              location: new google.maps.LatLng(lat,long),stopover: false,
-            });
-          }
+            var travelmode;
+            if (transportation_mode == 1)
+            travelmode=google.maps.TravelMode.WALKING
+            else
+            travelmode=google.maps.TravelMode.BICYCLING
 
-            service = new google.maps.DirectionsService;
+         var request = {
+           origin: new google.maps.LatLng(route_path[0][0], route_path[0][1]),
+           destination: new google.maps.LatLng(route_path[route_path.length - 1][0], route_path[route_path.length - 1][1]),
+           waypoints: waypoints,
+           travelMode: travelmode
+         };
 
-          service.route({
-            origin: new google.maps.LatLng(source[0], source[1]),
-            destination: new google.maps.LatLng(dest[0], dest[1]),
-            waypoints: path_points,
-            travelMode: 'WALKING'
-          }, function(response, status) {
-            if (status === 'OK') {
-              renderer.setDirections(response);
-            } else {
-              window.alert('Request failed with error ' + status);
-            }
-          });
+         directionsService.route(request, function(response, status) {
+           if (status === google.maps.DirectionsStatus.OK) {
+             directionsRenderer.setDirections(response);
+
+             // Fit the map to the bounds of the route
+             map.fitBounds(bounds);
+           } else {
+             console.error('Directions request failed: ' + status);
+           }
+         });
         }
+
+        function resetMap() {
+          // Clear the directions
+          directionsRenderer.setDirections(null);
+
+          // Reset the bounds
+          bounds = new google.maps.LatLngBounds();
+
+          // Fit the map to the empty bounds
+          map.fitBounds(bounds);
+        }
+
+        // Call the resetMap function when needed
+
 
 
     // Create a function to plot the distance on Google Maps
