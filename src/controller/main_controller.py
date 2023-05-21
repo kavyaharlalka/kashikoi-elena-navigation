@@ -4,7 +4,7 @@ import controller.api.google_maps_client as gmap_client
 import controller.helpers.constants as constants
 import osmnx as ox
 from werkzeug.exceptions import BadRequest
-
+import model.db_manager as db
 
 def home():
     return render_template("index.html")
@@ -19,6 +19,7 @@ def about():
 
 
 def get_route():
+    sql = db.SQL()
     data = request.get_json(force=True)
     if constants.REQUEST_JSON_SOURCE_KEY not in data or len(data[constants.REQUEST_JSON_SOURCE_KEY]) == 0:
         raise BadRequest(description="Source is required and should not be empty")
@@ -53,6 +54,13 @@ def get_route():
         # graph = route_manager.modify_graph_elevate(graph)
         source = ox.nearest_nodes(graph, source_coordinates[constants.COORDINATES_LONGITUDE], source_coordinates[constants.COORDINATES_LATITUDE])
         destination = ox.nearest_nodes(graph, destination_coordinates[constants.COORDINATES_LONGITUDE], destination_coordinates[constants.COORDINATES_LATITUDE])
+
+        sql.insert_into_database(source,
+                                 destination,
+                                 data[constants.REQUEST_JSON_DESTINATION_KEY],
+                                 data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
+                                 data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY],
+                                 data[constants.REQUEST_JSON_TRANSPORTATION_MODE_KEY])
 
         best_path_algorithm_result = route_manager.get_shortest_path(data[constants.REQUEST_JSON_ALGORITHM_ID_KEY], graph, source,
                                                destination, data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
