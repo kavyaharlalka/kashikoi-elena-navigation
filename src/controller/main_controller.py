@@ -67,7 +67,6 @@ def get_route():
                                                                  destination, data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
                                                                  data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY])
         best_path_algorithm_stats = [best_path_algorithm_result['coordinates'],
-                                     sum(ox.utils_graph.get_route_edge_attributes(graph, best_path_algorithm_result['nodes'], 'length')),
                                      route_manager.calculate_and_get_elevation(graph, best_path_algorithm_result['nodes'], "gain"),
                                      route_manager.calculate_and_get_elevation(graph, best_path_algorithm_result['nodes'], "drop")]
 
@@ -80,9 +79,9 @@ def get_route():
 
         return {
             "best_path_route": best_path_algorithm_stats[0],
-            "best_path_distance": best_path_algorithm_stats[1],
-            "best_path_gain": best_path_algorithm_stats[2],
-            "best_path_drop": best_path_algorithm_stats[3],
+            "best_path_distance": 0.0,
+            "best_path_gain": best_path_algorithm_stats[1],
+            "best_path_drop": best_path_algorithm_stats[2],
             "shortest_path_route": shortest_path_stats[0],
             "shortest_path_distance": shortest_path_stats[1],
             "shortest_path_gain": shortest_path_stats[2],
