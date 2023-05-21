@@ -19,7 +19,7 @@ def about():
 
 
 def get_route():
-    sql = db.SQL()
+    # sql = db.SQL()
     data = request.get_json(force=True)
     if constants.REQUEST_JSON_SOURCE_KEY not in data or len(data[constants.REQUEST_JSON_SOURCE_KEY]) == 0:
         raise BadRequest(description="Source is required and should not be empty")
