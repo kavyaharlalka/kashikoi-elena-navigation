@@ -55,12 +55,12 @@ def get_route():
         source = ox.nearest_nodes(graph, source_coordinates[constants.COORDINATES_LONGITUDE], source_coordinates[constants.COORDINATES_LATITUDE])
         destination = ox.nearest_nodes(graph, destination_coordinates[constants.COORDINATES_LONGITUDE], destination_coordinates[constants.COORDINATES_LATITUDE])
 
-        sql.insert_into_database(source,
-                                 destination,
-                                 data[constants.REQUEST_JSON_DESTINATION_KEY],
-                                 data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
-                                 data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY],
-                                 data[constants.REQUEST_JSON_TRANSPORTATION_MODE_KEY])
+        # sql.insert_into_database(source,
+        #                          destination,
+        #                          data[constants.REQUEST_JSON_DESTINATION_KEY],
+        #                          data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
+        #                          data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY],
+        #                          data[constants.REQUEST_JSON_TRANSPORTATION_MODE_KEY])
 
         best_path_algorithm_result = route_manager.get_shortest_path(data[constants.REQUEST_JSON_ALGORITHM_ID_KEY], graph, source,
                                                destination, data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
@@ -76,6 +76,16 @@ def get_route():
                              shortest_path_distance,
                              route_manager.getElevation(graph, shortest_path_nodes, "gain"),
                              route_manager.getElevation(graph, shortest_path_nodes, "drop")]
-        return { "shortest_path": shortestPathStats, "best_path": best_path_algorithm_stats }
+
+        return {
+            "best_path_route": best_path_algorithm_stats[0],
+            "shortest_path_route": shortestPathStats[0],
+            "shortest_path_distance": shortestPathStats[1],
+            "shortest_path_gain": shortestPathStats[2],
+            "shortest_path_drop": shortestPathStats[3],
+            "best_path_distance": best_path_algorithm_stats[1],
+            "best_path_gain": best_path_algorithm_stats[2],
+            "best_path_drop": best_path_algorithm_stats[3]
+         }
     except Exception as e:
         abort(e.code, str(e))
