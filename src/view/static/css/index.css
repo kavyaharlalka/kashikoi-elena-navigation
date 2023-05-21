@@ -1,5 +1,6 @@
 
     ul {
+
  list-style-type: none;
       overflow: hidden;
       background-color: #f1f1f1;
@@ -30,9 +31,9 @@
       }
       /* Set the height of the map container */
       #map {
-        height: 400px;
-         width: 50%;
-         float: right;
+        height: 680px;
+        width: 50%;
+        float: right;
       }
 
 
@@ -45,31 +46,30 @@
     }
 
           .input-container {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
       }
 
        .outer-container {
-       height: 400px;
-       background-image: url('/static/images/back2.png');
+       height: 680px;
+       background-image: url('/static/images/back3.png');
          /* Set the background color #e84003ab; */
        width: 50%; /* Set the width to 50% of the viewport width */
        float: left; /* Position the container on the left side */
-        justify-content: center;
-        align-items: center;
-
+       justify-content: center;
+       align-items: center;
       }
 
        .inner-container {
         padding: 40px;
-         width: 500px;
-            background-color: rgba(241, 241, 241, 0.1);
+        width: 500px;
+        background-color: rgba(241, 241, 241, 0.1);
             /*#f1f1f1;*/
-            border-radius: 10px;
-            margin: 0 auto;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            align-items: center;
-            margin-bottom: 10px;
-            margin-top: 30px;
+        border-radius: 10px;
+        margin: 0 auto;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        align-items: center;
+        margin-bottom: 10px;
+        margin-top: 20px;
       }
 
        .submit-btn {
@@ -143,20 +143,23 @@
         }
 
       .label {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             margin-right: 10px;
             font-family:monospace;
             border-color:#45a049;
-            border-style:solid;
+            /* border-style:solid; */
             color:#5a8153;
+            /* margin: 10px; */
+            /* padding: 10px; */
             }
         .textbox2{
                 flex-grow: 1;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                width: 80%;
             }
 
         .textbox2:focus {
@@ -164,3 +167,5 @@
             border-color: #80bdff;
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
+
+
