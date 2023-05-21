@@ -101,12 +101,12 @@ function initMap() {
 
             const url = '/getroute';
             const data = {
-                                   source: document.getElementById("source").value,
-                                   destination: document.getElementById("destination").value,
-                                   algorithm: document.getElementById("algorithm").value,
-                                   minimize_elevation_gain: document.getElementById("minimize_elevation_gain").value,
-                                   path_percentage: document.getElementById("path_percentage").value
-                                 };
+                           source: document.getElementById("source").value,
+                           destination: document.getElementById("destination").value,
+                           algorithm_id: parseInt(document.getElementById("algorithm").value),
+                           path_percentage: parseFloat(document.getElementById("path_percentage").value),
+                           minimize_elevation_gain: document.getElementById("minimize_elevation_gain").value == "1"
+                         };
 
             fetch(url, {
               method: 'POST',
