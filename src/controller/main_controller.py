@@ -19,6 +19,7 @@ def about():
 
 
 def get_route():
+    """ Get the best and shortest path between two nodes as per the given algorithm"""
     # sql = db.SQL()
     data = request.get_json(force=True)
     if constants.REQUEST_JSON_SOURCE_KEY not in data or len(data[constants.REQUEST_JSON_SOURCE_KEY]) == 0:
@@ -62,9 +63,9 @@ def get_route():
         #                          data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY],
         #                          data[constants.REQUEST_JSON_TRANSPORTATION_MODE_KEY])
 
-        best_path_algorithm_result = route_manager.get_shortest_path(data[constants.REQUEST_JSON_ALGORITHM_ID_KEY], graph, source,
-                                               destination, data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
-                                               data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY])
+        best_path_algorithm_result = route_manager.get_best_path(data[constants.REQUEST_JSON_ALGORITHM_ID_KEY], graph, source,
+                                                                 destination, data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
+                                                                 data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY])
         best_path_algorithm_stats = [best_path_algorithm_result['coordinates'],
                                      sum(ox.utils_graph.get_route_edge_attributes(graph, best_path_algorithm_result['nodes'], 'length')),
                                      route_manager.calculate_and_get_elevation(graph, best_path_algorithm_result['nodes'], "gain"),
