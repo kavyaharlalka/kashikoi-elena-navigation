@@ -99,7 +99,7 @@ function initMap() {
 
             if(validation == true) {
 
-            const url = '/test/getroute';
+            const url = '/getroute';
             const data = {
                                    source: document.getElementById("source").value,
                                    destination: document.getElementById("destination").value,
