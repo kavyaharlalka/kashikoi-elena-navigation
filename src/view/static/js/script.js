@@ -104,7 +104,7 @@ function initMap() {
                            source: document.getElementById("source").value,
                            destination: document.getElementById("destination").value,
                            algorithm_id: parseInt(document.getElementById("algorithm").value),
-                           path_percentage: 100.0 + parseFloat(document.getElementById("path_percentage").value),
+                           path_percentage: parseFloat(document.getElementById("path_percentage").value),
                            minimize_elevation_gain: document.getElementById("minimize_elevation_gain").value == "1",
                            transportation_mode: parseInt(document.getElementById("transportation_mode").value)
                          };
@@ -117,9 +117,11 @@ function initMap() {
               body: JSON.stringify(data)
             })
               .then(response => response.json())
-              .then(data => {
+              .then(data=> {
                 // Handle the response data
                 console.log(data);
+
+               showPathOnMap(data["best_path_route"], data["shortest_path_distance"],  data["shortest_path_gain"],data["best_path_distance"], data["best_path_gain"])
               })
               .catch(error => {
                 // Handle any errors
@@ -128,6 +130,35 @@ function initMap() {
 
 
         }
+        }
+
+        function showPathOnMap(path, distance, gainShort, elenavDist, gainElenav) {
+          var source = path[0]
+          var dest = path[path.length-1]
+
+          path_points = []
+          for (let i = 3; i < path.length-3; i++){
+            var lat = path[i][0];
+            var long= path[i][1];
+            path_points.push({
+              location: new google.maps.LatLng(lat,long),stopover: false,
+            });
+          }
+
+            service = new google.maps.DirectionsService;
+
+          service.route({
+            origin: new google.maps.LatLng(source[0], source[1]),
+            destination: new google.maps.LatLng(dest[0], dest[1]),
+            waypoints: path_points,
+            travelMode: 'WALKING'
+          }, function(response, status) {
+            if (status === 'OK') {
+              renderer.setDirections(response);
+            } else {
+              window.alert('Request failed with error ' + status);
+            }
+          });
         }
 
 
