@@ -67,8 +67,10 @@ def get_shortest_path(algorithm_id, graph, start, end, path_percentage, minimize
                 short_path.append(predecessors[short_path[-1]])
     # Floyd-Marshall
     elif algorithm_id == Algorithms.FLOYD_MARSHALL.value:
-        predecessors, distance = networkx.floyd_warshall_predecessor_and_distance(nx_graph, weight=custom_weight_func)
-        short_path = networkx.reconstruct_path(start, end, predecessors)
+        short_path = [end]
+        if not start == end:
+            predecessors, distance = networkx.floyd_warshall_predecessor_and_distance(nx_graph, weight=custom_weight_func)
+            short_path = networkx.reconstruct_path(start, end, predecessors)
 
     coord_path = get_coordinates_from_nodes(graph, short_path)
     return {"nodes": short_path, "coordinates": coord_path}
