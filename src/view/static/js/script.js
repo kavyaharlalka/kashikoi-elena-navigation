@@ -104,7 +104,7 @@ function initMap() {
                            source: document.getElementById("source").value,
                            destination: document.getElementById("destination").value,
                            algorithm_id: parseInt(document.getElementById("algorithm").value),
-                           path_percentage: parseFloat(document.getElementById("path_percentage").value),
+                           path_percentage: 100.0 + parseFloat(document.getElementById("path_percentage").value),
                            minimize_elevation_gain: document.getElementById("minimize_elevation_gain").value == "1"
                          };
 

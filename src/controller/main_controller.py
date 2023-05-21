@@ -23,7 +23,7 @@ def getroute():
             or data[constants.REQUEST_JSON_ALGORITHM_ID_KEY] > 6:
         raise BadRequest(description="Given algorithm is not supported")
     if constants.REQUEST_JSON_PATH_PERCENTAGE_KEY not in data \
-            or not isinstance(data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY], float) \
+            or not isinstance(data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY], (int, float)) \
             or data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY] < 100.0 \
             or data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY] > 200.0:
         raise BadRequest(description="Path percentage is required and should be valid")
