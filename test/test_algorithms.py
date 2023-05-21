@@ -19,3 +19,7 @@ def test_cost_function():
     """
     length, gradient = 10, 2
     assert route_manager.cost_function(length, gradient) == 1600, "incorrect cost"
+
+
+# def create_graph(location, distance, transportation_mode):
+#     return ox.graph_from_address(location, dist=distance, network_type=constants.TRANSPORTATION_MODES[transportation_mode])

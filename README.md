@@ -1,4 +1,4 @@
-# kashikoi-EleNA-navigation
+# CS 520: Kashikoi-EleNA
 
 # Problem Statement
 
@@ -8,3 +8,14 @@ Navigation Systems typically provide the shortest path between any two given poi
 
 1. Clone the repositors using git clone https://github.com/kavyaharlalka/kashikoi-elena-navigation.git
 2. Run bash run.sh to start the server
+
+# Testing and Evaluation
+
+There is a comprehensive test suite for our application to ensure that all the functions and modules are tested and all corner cases are covered. The unit tests are written using pytest and the integration tests are written using postman test suite runner.
+
+## How to run unit tests
+
+1. Run "python3 -m pytest" to run all the test cases
+2. The test session summary has been provided in the design document and the evaluation report.
+
+## How to run integration tests

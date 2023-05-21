@@ -17,22 +17,39 @@ class Algorithms(Enum):
     FLOYD_WARSHALL = 5
 
 def get_coordinates_from_nodes(graph, nodes_to_convert):
+    """ Gets the coordinates for an array of nodes.
+    Parameters:
+        graph -> The graph of the map containing the nodes
+        nodes_to_convert -> Array of nodes from which coordinates are to be fetched
+    Returns:
+        Array of coordinates
+    """
     return [(graph.nodes[node][constants.COORDINATES_Y], graph.nodes[node][constants.COORDINATES_X]) for node in nodes_to_convert]
 
-def get_shortest_path(algorithm_id, graph, start, end, path_percentage, minimize_elevation_gain: bool):
+def get_best_path(algorithm_id, graph, source_nearest_nodes, destination_nearest_nodes, path_percentage, minimize_elevation_gain: bool):
+    """ Get the best path between two nodes as per the given algorithm.
+    Parameters:
+        algorithm_id -> Id of the algorithm to be used to get the best path
+        graph -> The graph of the map containing the nodes
+        source_nearest_nodes -> Nodes nearest to the source
+        destination_nearest_nodes -> Nodes nearest to the destination
+        path_percentage -> Percentage of the shortest path
+        minimize_elevation_gain -> Will minimize elevation gain if set to true
+    Returns:
+        Array of nodes and array of coordinates for the best path
+    """
     # algorithms = ["Dijkstra", "Bidirectional Dijkstra", "A *", "Bellman - Ford", "Goldberg - Radzik", "Johnson", "Floyd - Warshall"]
     assert algorithm_id in [e.value for e in Algorithms], "Invalid Algorithm ID"
     assert graph is not None, "Invalid Location"
-    assert start is not None, "Invalid Source"
-    assert end is not None, "Invalid Destination"
+    assert source_nearest_nodes is not None, "Invalid Source"
+    assert destination_nearest_nodes is not None, "Invalid Destination"
     assert path_percentage in range(100, 201), "Invalid Path Percentage"
 
-    print(start)
-    print(end)
-    shortest_path_distance, short_path = 0, 0
+    print(source_nearest_nodes)
+    print(destination_nearest_nodes)
 
     nx_graph = networkx.Graph(graph)
-    shortest_path_distance = networkx.dijkstra_path_length(nx_graph, source=start, target=end, weight='length')
+    shortest_path_distance = networkx.dijkstra_path_length(nx_graph, source=source_nearest_nodes, target=destination_nearest_nodes, weight='length')
     max_distance = path_percentage * shortest_path_distance
 
     def custom_weight_func(u, v, data):
@@ -45,81 +62,92 @@ def get_shortest_path(algorithm_id, graph, start, end, path_percentage, minimize
         # You can customize how elevation gain is prioritized (minimized or maximized)
         return 1.0/elevation_gain if (not minimize_elevation_gain and not elevation_gain == 0) else elevation_gain
 
+    best_path = []
     # Dijkstra
     if algorithm_id == Algorithms.DIJKSTRA.value:
-        short_path = networkx.dijkstra_path(nx_graph, source=start, target=end, weight=custom_weight_func)
+        best_path = networkx.dijkstra_path(nx_graph, source=source_nearest_nodes, target=destination_nearest_nodes, weight=custom_weight_func)
     # Bi-Directional Dijkstra
     elif algorithm_id == Algorithms.BI_DIJKSTRA.value:
-        short_path = networkx.bidirectional_dijkstra(nx_graph, start, end, weight=custom_weight_func)[1]
+        best_path = networkx.bidirectional_dijkstra(nx_graph, source_nearest_nodes, destination_nearest_nodes, weight=custom_weight_func)[1]
     # A *
     elif algorithm_id == Algorithms.ASTAR.value:
-        short_path = networkx.astar_path(nx_graph, start, end, weight=custom_weight_func)
+        best_path = networkx.astar_path(nx_graph, source_nearest_nodes, destination_nearest_nodes, weight=custom_weight_func)
     # Bellman-Ford
     elif algorithm_id == Algorithms.BELLMANFORD.value:
-        short_path = networkx.bellman_ford_path(nx_graph, start, end, weight=custom_weight_func)
+        best_path = networkx.bellman_ford_path(nx_graph, source_nearest_nodes, destination_nearest_nodes, weight=custom_weight_func)
     # Goldberg-Radzik
     elif algorithm_id == Algorithms.GOLDBERG_RADZIK.value:
-        short_path = [end]
-        if not start == end:
+        best_path = [destination_nearest_nodes]
+        if not source_nearest_nodes == destination_nearest_nodes:
             # goldberg_radzik algorithm
-            predecessors, distances = networkx.goldberg_radzik(networkx.DiGraph(graph), start, weight=custom_weight_func)
-            while short_path[-1] != start:
-                short_path.append(predecessors[short_path[-1]])
+            predecessors, distances = networkx.goldberg_radzik(networkx.DiGraph(graph), source_nearest_nodes, weight=custom_weight_func)
+            while best_path[-1] != source_nearest_nodes:
+                best_path.append(predecessors[best_path[-1]])
     # Floyd-Warshall
     elif algorithm_id == Algorithms.FLOYD_WARSHALL.value:
-        short_path = [end]
-        if not start == end:
+        best_path = [destination_nearest_nodes]
+        if not source_nearest_nodes == destination_nearest_nodes:
             predecessors, distance = networkx.floyd_warshall_predecessor_and_distance(nx_graph, weight=custom_weight_func)
-            short_path = networkx.reconstruct_path(start, end, predecessors)
+            best_path = networkx.reconstruct_path(source_nearest_nodes, destination_nearest_nodes, predecessors)
 
-    coord_path = get_coordinates_from_nodes(graph, short_path)
-    return {"nodes": short_path, "coordinates": coord_path}
-
-
-def create_graph(location, distance, transportation_mode):
-    assert location is not None, "Invalid Location"
-    assert distance is not None, "Invalid Distance"
-    assert transportation_mode in constants.TRANSPORTATION_MODES, "Invalid Transportation Mode"
-
-    return ox.graph_from_address(location, dist=distance, network_type=constants.TRANSPORTATION_MODES[transportation_mode])
+    return {"nodes": best_path, "coordinates": get_coordinates_from_nodes(graph, best_path)}
 
 
-def get_map_graph(source, destination, transportation_mode):
-    assert source is not None, "Invalid Location"
-    assert destination is not None, "Invalid Distance"
+def get_map_graph(source_coordinates, destination_coordinates, transportation_mode):
+    print(os.getcwd())
+    """ Get the graph object for a map depending on the source
+    Parameters:
+        source_coordinates -> Tuple of the latitude and longitude coordinates of the source
+        destination_coordinates -> Tuple of the latitude and longitude coordinates of the destination
+        transportation_mode -> The mode of transportation, either 'walk' or 'bike'
+    Returns:
+        Graph object for the map
+    """
+    assert source_coordinates is not None, "Invalid Location"
+    assert destination_coordinates is not None, "Invalid Distance"
     assert transportation_mode in constants.TRANSPORTATION_MODES, "Invalid Transportation Mode"
 
     transportation_mode_str = constants.TRANSPORTATION_MODES[transportation_mode]
-    cached_graph_file_name = f"./graph_{transportation_mode_str}.p"
+    cached_graph_file_name = f"graph_{transportation_mode_str}.p"
     if os.path.exists(cached_graph_file_name):
         print("Loading cached graph")
         map_graph = pickle.load(open(cached_graph_file_name, "rb"))
     else:
         print("Cached graph not found. Downloading and caching, please wait")
-        map_graph = ox.graph_from_point(source, dist=30000, dist_type="network", network_type=transportation_mode_str)
+        map_graph = ox.graph_from_point(source_coordinates, dist=30000, dist_type="network", network_type=transportation_mode_str)
         map_graph = ox.elevation.add_node_elevations_google(map_graph, api_key=GMAP_API_KEY)
         pickle.dump(map_graph, open(cached_graph_file_name, "wb"))
         print("Download complete")
 
-    end_node = ox.nearest_nodes(map_graph, destination[1], destination[0], return_dist=False)
-    end_location = map_graph.nodes[end_node]
-    latitude_1 = end_location[constants.COORDINATES_Y]
-    longitude_1 = end_location[constants.COORDINATES_X]
+    destination_nearest_node = ox.nearest_nodes(map_graph, destination_coordinates[1], destination_coordinates[0])
+    destination_node = map_graph.nodes[destination_nearest_node]
     for node, data in map_graph.nodes(data=True):
-        latitude_2 = map_graph.nodes[node][constants.COORDINATES_Y]
-        longitude_2 = map_graph.nodes[node][constants.COORDINATES_X]
-        data['distance_from_destination'] = get_distance_from_destination(latitude_1, longitude_1, latitude_2, longitude_2)
+        current_node = map_graph.nodes[node]
+        data['distance_from_destination'] = get_distance_from_destination(destination_node[constants.COORDINATES_Y],
+                                                                          destination_node[constants.COORDINATES_X],
+                                                                          current_node[constants.COORDINATES_Y],
+                                                                          current_node[constants.COORDINATES_X])
     return map_graph
 
 
-def get_distance_from_destination(latitude_1, longitude_1, latitude_2, longitude_2, multiplier=6371008.8):
+def get_distance_from_destination(destination_latitude, destination_longitude, node_latitude, node_longitude):
+    """ Get the spherical distance from destination to the given node using the Haversine formula
+    Parameters:
+        destination_latitude -> Latitude coordinate of the destination
+        destination_longitude -> Longitude coordinate of the destination
+        node_latitude -> Latitude coordinate of the node to which the distance is to be calculated
+        node_longitude -> Longitude coordinate of the node to which the distance is to be calculated
+    Returns:
+        Spherical distance from the destination to the given node
+    """
     # Convert degrees to radians
-    coordinates = latitude_1, longitude_1, latitude_2, longitude_2
+    coordinates = destination_latitude, destination_longitude, node_latitude, node_longitude
     phi_1, lambda_1, phi_2, lambda_2 = [
         np.radians(c) for c in coordinates
     ]
 
     # Haversine formula
+    multiplier = 6371008.8
     haversine_result = (np.square(np.sin((phi_2 - phi_1) / 2)) + np.cos(phi_1) * np.cos(phi_2) *
                         np.square(np.sin((lambda_2 - lambda_1) / 2)))
     distance = 2 * multiplier * np.arcsin(np.sqrt(haversine_result))
@@ -127,9 +155,10 @@ def get_distance_from_destination(latitude_1, longitude_1, latitude_2, longitude
     return distance
 
 
-def calculate_and_get_elevation(graph, path_nodes, elevation_mode, return_individual_costs = False):
-    """ Computes the cost of a route which is the elevation of the route.
+def calculate_and_get_elevation(graph, path_nodes, elevation_mode, return_individual_costs=False):
+    """ Computes the elevation cost of a route.
     Parameters:
+        graph -> The graph of the map containing the nodes
         path_nodes -> Array of Node IDs
         elevation_mode -> Mode of elevation
         return_individual_costs -> If true, returns individual Costs of nodes as well
@@ -149,7 +178,15 @@ def calculate_and_get_elevation(graph, path_nodes, elevation_mode, return_indivi
 
 
 def get_cost_between_nodes(graph, node_1, node_2, elevation_mode="vanilla"):
-    """ defines the cost between two nodes """
+    """ Computes the elevation cost between two nodes.
+    Parameters:
+        graph -> The graph of the map containing the nodes
+        node_1 -> The first node
+        node_2 -> The second node
+        elevation_mode -> Mode of elevation
+    Returns:
+        Cost between the two nodes
+    """
     assert node_1 is not None and node_2 is not None, "Invalid node inputs"
     assert elevation_mode in constants.ELEVATION_MODES, "Invalid elevation mode"
 
