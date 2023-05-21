@@ -50,23 +50,24 @@ def get_shortest_path(algorithm_id, graph, start, end, path_percentage, minimize
         short_path = networkx.dijkstra_path(nx_graph, source=start, target=end, weight=custom_weight_func)
     # Bi-Directional Dijkstra
     elif algorithm_id == Algorithms.BI_DIJKSTRA.value:
-        short_path = networkx.bidirectional_dijkstra(graph, start, end, weight=custom_weight_func)[1]
+        short_path = networkx.bidirectional_dijkstra(nx_graph, start, end, weight=custom_weight_func)[1]
     # A *
     elif algorithm_id == Algorithms.ASTAR.value:
-        short_path = networkx.astar_path(graph, start, end, weight=custom_weight_func)
+        short_path = networkx.astar_path(nx_graph, start, end, weight=custom_weight_func)
     # Bellman-Ford
     elif algorithm_id == Algorithms.BELLMANFORD.value:
-        short_path = networkx.bellman_ford_path(graph, start, end, weight=custom_weight_func)
+        short_path = networkx.bellman_ford_path(nx_graph, start, end, weight=custom_weight_func)
     # Goldberg-Radzik
     elif algorithm_id == Algorithms.GOLDBERG_RADZIK.value:
-        # goldberg_radzik algorithm
-        predecessors, distances = networkx.goldberg_radzik(networkx.DiGraph(graph), start, weight=custom_weight_func)
         short_path = [end]
-        while short_path[-1] != start:
-            short_path.append(predecessors[short_path[-1]])
+        if not start == end:
+            # goldberg_radzik algorithm
+            predecessors, distances = networkx.goldberg_radzik(networkx.DiGraph(graph), start, weight=custom_weight_func)
+            while short_path[-1] != start:
+                short_path.append(predecessors[short_path[-1]])
     # Johnson
     elif algorithm_id == Algorithms.JOHNSON.value:
-        short_path = networkx.johnson(nx_graph, weight=custom_weight_func)
+        short_path = networkx.johnson(nx_graph, weight='length')
     # Floyd-Marshall
     elif algorithm_id == Algorithms.FLOYD_MARSHALL.value:
         predecessors, distance = networkx.floyd_warshall_predecessor_and_distance(nx_graph, weight=custom_weight_func)
