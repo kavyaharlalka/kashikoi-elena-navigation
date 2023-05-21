@@ -11,6 +11,9 @@ def home():
 def help():
     return render_template("help.html")
 
+def about():
+    return render_template("about.html")
+
 def getroute():
     data = request.get_json(force=True)
     if constants.REQUEST_JSON_SOURCE_KEY not in data or len(data[constants.REQUEST_JSON_SOURCE_KEY]) == 0:
@@ -43,5 +46,4 @@ def getroute():
                                                destination, data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
                                                data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY])
     except Exception as e:
-        abort(500, description="Resource not found")
-        # return handle_exception(e)
+        abort(e.code, str(e))
