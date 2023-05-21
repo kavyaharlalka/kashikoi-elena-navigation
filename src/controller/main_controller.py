@@ -23,7 +23,7 @@ def getroute():
     source = ox.nearest_nodes(graph, source_coordinates['lat'], source_coordinates['lng'])
     destination_coordinates = gmap_client.get_coordinates(data['destination'])
     destination = ox.nearest_nodes(graph, destination_coordinates['lat'], destination_coordinates['lng'])
-    return route_manager.get_shortest_path(data['algorithm_id'], graph, source, destination, float(data['path_percentage']), bool(data['minimize_elevation_gain']))
+    return route_manager.get_shortest_path(int(data['algorithm_id']), graph, source, destination, float(data['path_percentage']), bool(data['minimize_elevation_gain']))
     # except Exception as e:
     #    print(e)
 
