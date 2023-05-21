@@ -51,10 +51,11 @@ def get_route():
         graph = route_manager.get_map_graph((source_coordinates[constants.COORDINATES_LATITUDE], source_coordinates[constants.COORDINATES_LONGITUDE]),
                                             (destination_coordinates[constants.COORDINATES_LATITUDE], destination_coordinates[constants.COORDINATES_LONGITUDE]),
                                             data[constants.REQUEST_JSON_TRANSPORTATION_MODE_KEY])
-        # graph = route_manager.populate_graph(graph)
-        # graph = route_manager.modify_graph_elevate(graph)
-        source = ox.nearest_nodes(graph, source_coordinates[constants.COORDINATES_LONGITUDE], source_coordinates[constants.COORDINATES_LATITUDE])
-        destination = ox.nearest_nodes(graph, destination_coordinates[constants.COORDINATES_LONGITUDE], destination_coordinates[constants.COORDINATES_LATITUDE])
+        source, source_distance = ox.nearest_nodes(graph, source_coordinates[constants.COORDINATES_LONGITUDE], source_coordinates[constants.COORDINATES_LATITUDE], return_dist=True)
+        destination, destination_distance = ox.nearest_nodes(graph, destination_coordinates[constants.COORDINATES_LONGITUDE], destination_coordinates[constants.COORDINATES_LATITUDE], return_dist=True)
+
+        if source_distance > 30000 or destination_distance > 30000:
+            raise BadRequest(description="Currently the map only supports a 30km radius around Amherst")
 
         # sql.insert_into_database(source,
         #                          destination,
@@ -88,4 +89,4 @@ def get_route():
             "shortest_path_drop": shortest_path_stats[3]
          }
     except Exception as e:
-        abort(500, str(e))
+        abort(400, str(e))
