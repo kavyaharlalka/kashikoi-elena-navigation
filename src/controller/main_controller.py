@@ -79,13 +79,13 @@ def get_route():
 
         return {
             "best_path_route": best_path_algorithm_stats[0],
+            "best_path_distance": best_path_algorithm_stats[1],
+            "best_path_gain": best_path_algorithm_stats[2],
+            "best_path_drop": best_path_algorithm_stats[3],
             "shortest_path_route": shortestPathStats[0],
             "shortest_path_distance": shortestPathStats[1],
             "shortest_path_gain": shortestPathStats[2],
-            "shortest_path_drop": shortestPathStats[3],
-            "best_path_distance": best_path_algorithm_stats[1],
-            "best_path_gain": best_path_algorithm_stats[2],
-            "best_path_drop": best_path_algorithm_stats[3]
+            "shortest_path_drop": shortestPathStats[3]
          }
     except Exception as e:
         abort(e.code, str(e))
