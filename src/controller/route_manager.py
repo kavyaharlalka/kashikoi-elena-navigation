@@ -94,6 +94,7 @@ def get_best_path(algorithm_id, graph, source_nearest_nodes, destination_nearest
 
 
 def get_map_graph(source_coordinates, destination_coordinates, transportation_mode):
+    print(os.getcwd())
     """ Get the graph object for a map depending on the source
     Parameters:
         source_coordinates -> Tuple of the latitude and longitude coordinates of the source
@@ -107,7 +108,7 @@ def get_map_graph(source_coordinates, destination_coordinates, transportation_mo
     assert transportation_mode in constants.TRANSPORTATION_MODES, "Invalid Transportation Mode"
 
     transportation_mode_str = constants.TRANSPORTATION_MODES[transportation_mode]
-    cached_graph_file_name = f"./graph_{transportation_mode_str}.p"
+    cached_graph_file_name = f"graph_{transportation_mode_str}.p"
     if os.path.exists(cached_graph_file_name):
         print("Loading cached graph")
         map_graph = pickle.load(open(cached_graph_file_name, "rb"))
