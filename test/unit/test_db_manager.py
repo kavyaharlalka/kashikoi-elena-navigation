@@ -17,4 +17,16 @@ def cleanup_delete_record(source, destination, algorithm_id, path_percent, minim
     connection.close()
 
 
+def test_insert_into_database_invalid_data():
+    source = 'Dummy source'
+    destination = 'Dummy destination'
+    algorithm_id = 10
+    path_percent = 200
+    minimize_elevation_gain = True
+    transportation_mode = 1
+    json_result = {'testingKeyStr': 'testingValue', 'testingKeyInt': 10, 'testingKeyBool': True}
+
+    with pytest.raises(IntegrityError, match='CHECK constraint failed: history'):
+        db_manager.insert_into_database(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode, json_result)
+
 
