@@ -8,19 +8,43 @@ from werkzeug.exceptions import BadRequest
 import model.db_manager as db
 
 def home():
+    """
+    Render the Home page
+    """
     return render_template("index.html")
 
 
 def help():
+    """
+    Render the Help page
+    """
     return render_template("help.html")
 
 
 def about():
+    """
+    Render the About page
+    """
     return render_template("about.html")
 
 
 def get_route():
-    """ Get the best and shortest path between two nodes as per the given algorithm"""
+    """ Gets the best and shortest path between two nodes as per the given algorithm.
+    Returns:
+        JSON with the following key-value pairs:
+        {
+            "best_path_route": Array of coordinates of the best path,
+            "best_path_distance": Value (in meters) of best path distance,
+            "best_path_gain": Value (in meters) of best path gain,
+            "best_path_drop": Value (in meters) of best path drop,
+            "shortest_path_route": Array of coordinates of the shortest path,
+            "shortest_path_distance": Value (in meters) of shortest path distance,
+            "shortest_path_gain": Value (in meters) of shortest path gain,
+            "shortest_path_drop": Value (in meters) of shortest path drop
+        }
+
+        These statistics will be used to show the best distance to the users that we have calculated and how much elevation they will gain or lose.
+    """
     data = request.get_json(force=True)
     if constants.REQUEST_JSON_SOURCE_KEY not in data \
             or not isinstance(data[constants.REQUEST_JSON_SOURCE_KEY], str) \

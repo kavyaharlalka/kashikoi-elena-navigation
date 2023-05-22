@@ -22,11 +22,17 @@ exclude_also =
 
 ignore_errors = True
 omit = 
+	# app.py is for running flask and loading blueprints, it does not need to be tested
     src/app.py
+	# config.py just loads the config from ini file
     src/config.py
+	# main_controller will be tested using integration tests since it is the api class
 	src/controller/main_controller.py
+	# view has the frontend code (not in python)
     */view/*
+	# routes has the blueprint for flask to call routes from controller
     */routes/*
+	# Init files need not be tested
     *__init__.py*
 
 [html]
