@@ -12,7 +12,7 @@ max_elev_response_times = []
 source = "Brittany Manor Drive, Amherst, MA, USA"
 path_percentage = 400
 destination = "Hadley Scoop at the Silos, Mill Valley Road, Hadley, MA, USA"
-algos=[0,1,2]
+algos=[0,1,2,3,4]
 
 
 minimize_elevation_gain = True
@@ -62,16 +62,16 @@ print(f"max_elevation_response_time:{max_elev_response_times}")
 
 fig = plt.figure(figsize = (10, 5))
 
-algo=["Dijkstra", "Bidirectional Dijkstra", "A*"]
+algo=["Dijkstra", "Bidirectional Dijkstra", "A*", "B", "G", "F"]
 
-x = np.arange(3)
+x = np.arange(5)
 width = 0.2
 
 # plot data in grouped manner of bar type
 plt.bar(x-0.2, min_elev_response_times, width, color='cyan')
 plt.bar(x+0.2, max_elev_response_times, width, color='green')
-plt.xticks(x, ["Dijkstra", "Bidirectional Dijkstra", "A*"])
+plt.xticks(x, ["Dijkstra", "Bidirectional Dijkstra", "A*", "Bellman-Ford","Goldberg-Radzik"])
 plt.xlabel("Algorithm")
-plt.ylabel("API Response Time")
+plt.ylabel("API Response Time (in seconds)")
 plt.legend(["Minimum Elevation", "Maximum Elevation"])
 plt.show()

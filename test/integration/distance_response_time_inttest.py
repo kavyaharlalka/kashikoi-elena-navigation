@@ -8,6 +8,7 @@ PORT = "5000"
 server_url = "http://" + HOST + ":" + PORT
 min_elev_response_times = []
 max_elev_response_times = []
+dist=[]
 
 
 source = "115 Brittany Manor Drive, Amherst, MA, USA"
@@ -37,6 +38,7 @@ for destination in destinations:
     server_json = server_response.json()
     if not "message" in server_json:
         min_elev_response_times.append(post_time_end - post_time_start)
+        dist.append(server_json["best_path_distance"])
 
 
 minimize_elevation_gain =  False
@@ -64,11 +66,11 @@ print(f"max_elevation_response_time:{max_elev_response_times}")
 
 x = [0, 1, 2, 3, 4]
 
-plt.plot(min_elev_response_times, label ='Minimum Elevation')
-plt.plot(max_elev_response_times, '-.', label ='Maximum Elevation')
+plt.plot(dist,min_elev_response_times, label ='Minimum Elevation')
+plt.plot(dist,max_elev_response_times, '-.', label ='Maximum Elevation')
 
-plt.xlabel("Path Distance")
-plt.ylabel("Response Time")
+plt.xlabel("Path Distance (in meters)")
+plt.ylabel("API Response Time (in seconds)")
 plt.legend()
 plt.title('Response Time for Minimum and Maximum Elevation for Dijkstras Algorithm')
 plt.show()
