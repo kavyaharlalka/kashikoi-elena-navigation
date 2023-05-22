@@ -6,6 +6,7 @@
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAebd8LBGpJ1X9E6seWFbETQ7ZvpzN31Hg&libraries=places"></script>
+
 </head>
 <body>
 <header>
@@ -17,13 +18,39 @@
     </ul>
 </div>
 <div class="header">
-    <img src="{{ url_for('static', filename='/images/banner2.png') }}" alt="Logo">
-    <div class="text-overlay">Elena</div>
-    <div class="text-overlay2">find your journey ...</div>
+    <img src="{{ url_for('static', filename='/images/back3.png') }}" alt="Logo">
+    <div class="text-overlay4">
+
+        <b><font size = "+4"> To use our EleNA application, please follow the steps given below: </font></b>
+        <br><br>
+        <font size = "+2">
+1. Select a source as well as a destination point using the text boxes. These boxes have been set to autocomplete and the points must lie somewhere on the map of the United States of America. <br>
+
+2. Now you can select the algorithm that you want to use as well as if you want to minimize or maximize the elevation gain. <br>
+
+3. Use the slider for Path Limit to set a constraint on the paths as a percentage of the smallest distance between the two chosen points. <br>
+
+4. Once entered, press “Go” to see the optimal route. The application will process the information and once a valid response has been received from the server, a map will be rendered on the UI showing the optimal route according to your input preferences. <br>
+
+5. You can also visualize the total distance as well as the elevation gain. <br>
+
+6. In the case that there is a crash or error, appropriate error messages will be shown so that they can be resolved. <br><br>
+
+
+Minimize/Maximize Elevation:
+This is a choice between finding a path with more or less elevation. If you choose “minimize” elevation gain, the system will attempt to find a route that has the least elevation gain during the entire route.
+On the other hand, choosing “maximize” elevation gain refers to finding a route that has the maximum amount of elevation gain within the routes that
+satisfy the other constraints between the two points. <br><br>
+
+
+Path Limit: This is a choice on the constraint that you want to set on the possible routes that the system considers while calculating the optimal route between the two points. The Path Limit can be a number
+(or a percentage between 100 to 200) which is a distance between 1*SD and 2*SD where SD refers to the shortest distance between the two given points. For example, setting path limit to 150% means that the system
+will consider those routes that have a distance between the points less than or equal to 1.5 times the shortest distance between the two points.
+
+
+</font>
 </div>
 </header>
-Help
-
 
 </body>
 </html>

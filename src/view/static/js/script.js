@@ -10,6 +10,11 @@ var directionsService;
 var directionsRenderer
 var line;
 
+function scrollDown() {
+  // Scroll to the bottom of the page
+  window.scrollTo(0, 680);
+}
+
 // Initialize the map
 function initMap() {
       reset();

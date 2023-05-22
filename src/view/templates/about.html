@@ -3,26 +3,44 @@
 <head>
     <meta charset="utf-8">
     <title>Elena</title>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAebd8LBGpJ1X9E6seWFbETQ7ZvpzN31Hg&libraries=places"></script>
+
 </head>
 <body>
-<div class="text-overlay3">
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/help">Help</a></li>
-    </ul>
-</div>
-<div class="header">
-    <img src="{{ url_for('static', filename='/images/banner2.png') }}" alt="Logo">
-    <div class="text-overlay">Elena</div>
-    <div class="text-overlay2">find your journey ...</div>
-</div>
+<header>
+    <div class="text-overlay3">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/help">Help</a></li>
+        </ul>
+    </div>
+    <div class="header">
+        <img src="{{ url_for('static', filename='/images/back3.png') }}" alt="Logo">
+        <div class="text-overlay4">
 
-About
+            <b><font size = "+4"> Elena : Elevation Navigation System </font></b>
+            <br><br>
+            <font size = "+2">
+Elena is a web-based application that takes a source and destination location and finds the optimal route between them that maximizes or minimizes elevation gain while limiting the total path distance to n% of the shortest path between these two locations.
+<br>
+                Navigation Systems typically provide the shortest path between any two given points. These are not optimal for a lot of scenarios where the user is interested in finding a path which has the least elevation gain. Moreover, some users might be interested in finding a path which has elevation gain so that they can partake in an intense and time-constrained workout. To extend navigation systems to solve the above problems,
+                we have designed Elena that takes two points as input and finds the optimal route between them that maximizes or minimizes elevation gain while limiting the total path distance to n% of the shortest path between these two points.
+                The application will take in a pair of points, one corresponding to the source and the other corresponding to the destination. The user of the system will also provide a choice between maximum or minimum elevation gain and a percentage of shortest path within which we will calculate the route. Finally, the user will select an algorithm out of 7 algorithms that are made available in our system. These are:
+                Dijkstra’s
+                Bi-Directional Dijkstra’s
+                A*
+                Bellman-Ford
+                Goldberg-Radzik
+                Floyd-Warshall
+                The expected output of the system will be on the map showing the visual representation of the optimal route that we have determined for the user to travel from the source to the destination.
+                The system will check and validate the inputs that are entered into the application and will prompt the user in the case of unexpected input.
 
+            </font>
+        </div>
+</header>
 
 </body>
 </html>
