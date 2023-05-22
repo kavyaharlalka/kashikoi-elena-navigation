@@ -200,3 +200,28 @@ def get_cost_between_nodes(graph, node_1, node_2, elevation_mode="vanilla"):
             return graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION]
     else:
         return abs(graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION])
+
+
+def get_route_edge_attributes(graph, path_nodes, attribute_name):
+    """
+    Reference - https://osmnx.readthedocs.io/en/stable/osmnx.html#osmnx.utils_graph.get_route_edge_attributes
+    Get a list of attribute values for each edge in a path.
+    Parameters:
+        graph -> input graph
+        path_nodes -> list of nodes IDs constituting the path
+        attribute_name -> the name of the attribute to get the value of for each edge.
+    Returns:
+        attribute_values -> list of edge attribute values
+    """
+    minimize_key = "length"
+    attribute_values = []
+    for u, v in zip(path_nodes[:-1], path_nodes[1:]):
+        edge_data = graph.get_edge_data(u, v)
+        if graph.get_edge_data(u, v) is None:
+            continue
+        else:
+            # if there are parallel edges between two nodes, select the one with the lowest value of minimize_key
+            data = min(edge_data.values(), key=lambda x: x[minimize_key])
+        attribute_value = data[attribute_name]
+        attribute_values.append(attribute_value)
+    return attribute_values
