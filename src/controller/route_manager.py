@@ -1,3 +1,5 @@
+import sys
+
 import networkx
 import numpy as np
 import osmnx as ox
@@ -52,6 +54,7 @@ def get_best_path(algorithm_id, graph, source_nearest_nodes, destination_nearest
     shortest_path_distance = networkx.dijkstra_path_length(nx_graph, source=source_nearest_nodes, target=destination_nearest_nodes, weight='length')
     max_distance = (path_percentage * shortest_path_distance) / 100.0
 
+    is_algorithm_with_not_supporting_none = algorithm_id == Algorithms.BELLMANFORD.value or algorithm_id == Algorithms.GOLDBERG_RADZIK.value
     destination_node = graph.nodes[destination_nearest_nodes]
     def custom_weight_func(u, v, data):
         elevation_gain = abs(nx_graph.nodes[v]['elevation'] - nx_graph.nodes[u]['elevation'])
@@ -63,7 +66,7 @@ def get_best_path(algorithm_id, graph, source_nearest_nodes, destination_nearest
                                                                   current_node[constants.COORDINATES_X])
 
         if distance_from_destination > max_distance or elevation_gain < 0:
-            return None  # Ignore paths that exceed the max_distance
+            return sys.maxsize if is_algorithm_with_not_supporting_none else None  # Ignore paths that exceed the max_distance
 
         # You can customize how elevation gain is prioritized (minimized or maximized)
         return 1.0/elevation_gain if (not minimize_elevation_gain and not elevation_gain == 0) else elevation_gain
@@ -86,7 +89,7 @@ def get_best_path(algorithm_id, graph, source_nearest_nodes, destination_nearest
         best_path = [destination_nearest_nodes]
         if not source_nearest_nodes == destination_nearest_nodes:
             # goldberg_radzik algorithm
-            predecessors, distances = networkx.goldberg_radzik(networkx.DiGraph(graph), source_nearest_nodes, weight=custom_weight_func)
+            predecessors, distances = networkx.goldberg_radzik(networkx.DiGraph(graph), source_nearest_nodes, weight='elevation')
             while best_path[-1] != source_nearest_nodes:
                 best_path.append(predecessors[best_path[-1]])
     # Floyd-Warshall
@@ -197,3 +200,4 @@ def get_cost_between_nodes(graph, node_1, node_2, elevation_mode="vanilla"):
             return graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION]
     else:
         return abs(graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION])
+    
