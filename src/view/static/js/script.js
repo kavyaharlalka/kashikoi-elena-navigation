@@ -1,6 +1,24 @@
 document.addEventListener('DOMContentLoaded', function() {
 initMap();
-});
+
+      const slider = document.getElementById('path_percentage');
+
+      const sliderValue = document.getElementById('sliderValue');
+
+            // Update value when slider value changes
+            slider.addEventListener('input', function() {
+              sliderValue.textContent = this.value;
+            });
+
+            // Clear value on mouseout
+            slider.addEventListener('mouseout', function() {
+              sliderValue.textContent = '';
+            });
+
+
+          });
+
+
 
 var map;
 var bounds;
@@ -142,7 +160,10 @@ Promise.race([
   .then(data => {
 
                console.log(data);
+               const paragraph = document.getElementById('result');
 
+                                  // Add text to the paragraph element
+                paragraph.textContent = 'Map is loading... Please wait !!!'
                showPathOnMap(data["best_path_route"], data["shortest_path_distance"],  data["shortest_path_gain"],data["best_path_distance"], data["best_path_gain"],
                parseInt(document.getElementById("transportation_mode").value))
 
@@ -162,14 +183,16 @@ Promise.race([
   });
   }}
 
-      function showPathOnMap( route_path, distance, gainShort, elenavDist, gainElenav, transportation_mode) {
+      function showPathOnMap( best_route_path, shortest_route_distance, shortest_route_elevgain, best_route_distance, best_route_elevgain, transportation_mode) {
+
          reset();
+
          var MAX_WAYPOINTS = 25; // Maximum number of waypoints allowed
          var waypoints = [];
-         var numWaypoints = route_path.length;
+         var numWaypoints = best_route_path.length;
          var step = Math.ceil(numWaypoints / MAX_WAYPOINTS);
          for (var i = 0; i < numWaypoints; i += step) {
-           var latLng = new google.maps.LatLng(route_path[i][0], route_path[i][1]);
+           var latLng = new google.maps.LatLng(best_route_path[i][0], best_route_path[i][1]);
            waypoints.push({
              location: latLng,
              stopover: true
@@ -184,8 +207,8 @@ Promise.race([
             travelmode=google.maps.TravelMode.BICYCLING
 
          var request = {
-           origin: new google.maps.LatLng(route_path[0][0], route_path[0][1]),
-           destination: new google.maps.LatLng(route_path[route_path.length - 1][0], route_path[route_path.length - 1][1]),
+           origin: new google.maps.LatLng(best_route_path[0][0],best_route_path[0][1]),
+           destination: new google.maps.LatLng(best_route_path[best_route_path.length - 1][0], best_route_path[best_route_path.length - 1][1]),
            waypoints: waypoints,
            travelMode: travelmode
          };
@@ -199,6 +222,11 @@ Promise.race([
              {
              alert("We have shown an approximated path as the maximum number of waypoints has been exceeded ")
              }
+
+              const paragraph = document.getElementById('result');
+
+                   // Add text to the paragraph element
+              paragraph.textContent = 'We found the best route for you !! The elevation gain of this path is '+ best_route_elevgain.toFixed(2)
 
            }  else if (status === google.maps.DirectionsStatus.NOT_FOUND) {
                   alert('Directions not found. Please check the provided locations.');

@@ -24,6 +24,7 @@
 </header>
 <!-- Source and Destination Input -->
 <div class="outer-container">
+    <p id="result" class="pararesult">  Fill this form to find the best path on the map</p>
     <div class="inner-container">
     <div class="input-container">
         <label for="source" class="label" > Source </label>
@@ -61,8 +62,12 @@
     </div>
 
     <div class="input-container">
-        <label for="path_percentage" class="label">Path Limit</label>
-        <input type="range" id="path_percentage" class="textbox2"  name="scale" min="100" max="200" value="150">
+
+        <div class="slider-container">
+            <label for="path_percentage" class="label">Path Limit</label>
+        <input type="range" id="path_percentage"  min="100" max="500" value="150" step="1" class="slider" >
+            <div class="slider-value" id="sliderValue"></div>
+        </div>
     </div>
         <div class="input-container">
     <button class="submit-btn" onclick="showMap()">Go</button>
