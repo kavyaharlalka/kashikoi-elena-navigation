@@ -20,7 +20,6 @@ def about():
 
 def get_route():
     """ Get the best and shortest path between two nodes as per the given algorithm"""
-    # sql = db.SQL()
     data = request.get_json(force=True)
     if constants.REQUEST_JSON_SOURCE_KEY not in data or len(data[constants.REQUEST_JSON_SOURCE_KEY]) == 0:
         raise BadRequest(description="Source is required and should not be empty")
@@ -46,6 +45,16 @@ def get_route():
         raise BadRequest(description="Given transportation mode is not supported")
 
     try:
+        result_from_db = db.get_navigation_if_exists(data[constants.REQUEST_JSON_SOURCE_KEY],
+                                data[constants.REQUEST_JSON_DESTINATION_KEY],
+                                data[constants.REQUEST_JSON_ALGORITHM_ID_KEY],
+                                data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
+                                data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY],
+                                data[constants.REQUEST_JSON_TRANSPORTATION_MODE_KEY])
+
+        if result_from_db is not None:
+            return result_from_db
+
         source_coordinates = gmap_client.get_coordinates(data[constants.REQUEST_JSON_SOURCE_KEY])
         destination_coordinates = gmap_client.get_coordinates(data[constants.REQUEST_JSON_DESTINATION_KEY])
         graph = route_manager.get_map_graph((source_coordinates[constants.COORDINATES_LATITUDE], source_coordinates[constants.COORDINATES_LONGITUDE]),
@@ -56,13 +65,6 @@ def get_route():
 
         if source_distance > 30000 or destination_distance > 30000:
             raise BadRequest(description="Currently the map only supports a 30km radius around Amherst")
-
-        # sql.insert_into_database(source,
-        #                          destination,
-        #                          data[constants.REQUEST_JSON_DESTINATION_KEY],
-        #                          data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
-        #                          data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY],
-        #                          data[constants.REQUEST_JSON_TRANSPORTATION_MODE_KEY])
 
         best_path_algorithm_result = route_manager.get_best_path(data[constants.REQUEST_JSON_ALGORITHM_ID_KEY], graph, source,
                                                                  destination, data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
@@ -78,7 +80,7 @@ def get_route():
                              route_manager.calculate_and_get_elevation(graph, shortest_path_nodes, "gain"),
                              route_manager.calculate_and_get_elevation(graph, shortest_path_nodes, "drop")]
 
-        return {
+        result = {
             "best_path_route": best_path_algorithm_stats[0],
             "best_path_distance": 0.0,
             "best_path_gain": best_path_algorithm_stats[1],
@@ -88,5 +90,14 @@ def get_route():
             "shortest_path_gain": shortest_path_stats[2],
             "shortest_path_drop": shortest_path_stats[3]
          }
+
+        db.insert_into_database(data[constants.REQUEST_JSON_SOURCE_KEY],
+                                data[constants.REQUEST_JSON_DESTINATION_KEY],
+                                data[constants.REQUEST_JSON_ALGORITHM_ID_KEY],
+                                data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY],
+                                data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY],
+                                data[constants.REQUEST_JSON_TRANSPORTATION_MODE_KEY],
+                                result)
+        return result
     except Exception as e:
         abort(400, str(e))
