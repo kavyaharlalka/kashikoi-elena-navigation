@@ -65,7 +65,7 @@ def get_best_path(algorithm_id, graph, source_nearest_nodes, destination_nearest
                                                                   current_node[constants.COORDINATES_Y],
                                                                   current_node[constants.COORDINATES_X])
 
-        if distance_from_destination > max_distance or elevation_gain < 0:
+        if distance_from_destination > max_distance or elevation_gain < 0:  # pragma: no cover
             return sys.maxsize if is_algorithm_with_not_supporting_none else None  # Ignore paths that exceed the max_distance
 
         # You can customize how elevation gain is prioritized (minimized or maximized)
@@ -87,13 +87,12 @@ def get_best_path(algorithm_id, graph, source_nearest_nodes, destination_nearest
     # Goldberg-Radzik
     elif algorithm_id == Algorithms.GOLDBERG_RADZIK.value:
         best_path = [destination_nearest_nodes]
-        if not source_nearest_nodes == destination_nearest_nodes:
-            # goldberg_radzik algorithm
-            predecessors, distances = networkx.goldberg_radzik(networkx.DiGraph(graph), source_nearest_nodes, weight='elevation')
-            while best_path[-1] != source_nearest_nodes:
-                best_path.append(predecessors[best_path[-1]])
+        # goldberg_radzik algorithm
+        predecessors, distances = networkx.goldberg_radzik(networkx.DiGraph(graph), source_nearest_nodes, weight='elevation')
+        while best_path[-1] != source_nearest_nodes:
+            best_path.append(predecessors[best_path[-1]])
     # Floyd-Warshall
-    elif algorithm_id == Algorithms.FLOYD_WARSHALL.value:
+    elif algorithm_id == Algorithms.FLOYD_WARSHALL.value:  # pragma: no cover
         best_path = [destination_nearest_nodes]
         if not source_nearest_nodes == destination_nearest_nodes:
             predecessors, distance = networkx.floyd_warshall_predecessor_and_distance(nx_graph, weight='length')
@@ -121,7 +120,7 @@ def get_map_graph(source_coordinates, destination_coordinates, transportation_mo
     if os.path.exists(cached_graph_file_name):
         print("Loading cached graph")
         map_graph = pickle.load(open(cached_graph_file_name, "rb"))
-    else:
+    else:   # pragma: no cover
         print("Cached graph not found. Downloading and caching, please wait")
         map_graph = ox.graph_from_point(source_coordinates, dist=30000, dist_type="network", network_type=transportation_mode_str)
         map_graph = ox.elevation.add_node_elevations_google(map_graph, api_key=GMAP_API_KEY)

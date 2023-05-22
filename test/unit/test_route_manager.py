@@ -86,7 +86,77 @@ def test_get_best_path():
         graph = ox.elevation.add_node_elevations_google(graph, api_key=config.GMAP_API_KEY)
         origin_node = 5850031917
         destination_node = 5850477768
-        actual_output = route_manager.get_best_path(0, graph, origin_node, destination_node, 200, True)
+
+        for algorithm_id in [0, 1, 2]:
+            actual_output = route_manager.get_best_path(algorithm_id, graph, origin_node, destination_node, 200, True)
+            assert 'nodes' in actual_output
+            assert 'coordinates' in actual_output
+            assert len(actual_output['nodes']) == len(expected_output['nodes'])
+            assert len(actual_output['coordinates']) == len(expected_output['coordinates'])
+            assert all([a == b for a, b in zip(actual_output['nodes'], expected_output['nodes'])])
+            assert all([a == b for a, b in zip(actual_output['coordinates'], expected_output['coordinates'])])
+    else:
+        # skip assertion since elevation is required for which API key is required
+        assert 1 == 1
+
+def test_get_best_path_bellman_ford():
+    """ Test that valid path is returned by best_path for Bellman ford algo with valid input data """
+
+    if len(config.GMAP_API_KEY) > 0:
+        expected_output = {'nodes': [5850031917, 66702069, 66631127, 66657614, 7873723660, 7873723658, 66682598,
+                                     1445170567, 5850031602, 8388384018, 8388383988, 2296737893, 1445169892, 66654525,
+                                     66669179, 1443766524, 66695928, 66699101, 8504871937, 4268906699, 66704353,
+                                     6944996582, 66645750, 6353520419, 6353520417, 6353520414, 7278329711, 7278329716,
+                                     7278329712, 6313650321, 8390480484, 5850477768],
+                           'coordinates': [(42.3831146, -72.5214055), (42.382913, -72.522148), (42.383922, -72.5227),
+                                           (42.383673, -72.52374), (42.3841602, -72.5240321), (42.3843242, -72.5241206),
+                                           (42.384405, -72.524164), (42.3844277, -72.5244499), (42.3845188, -72.5244884),
+                                           (42.385187, -72.5247775), (42.3852413, -72.524801), (42.3853693, -72.5248564),
+                                           (42.3854468, -72.5248899), (42.3854218, -72.5249877), (42.3852457, -72.5257545),
+                                           (42.3852249, -72.5258406), (42.3849671, -72.5269808), (42.3849387, -72.527095),
+                                           (42.3849105, -72.5272099), (42.3847076, -72.52856), (42.384707, -72.528595),
+                                           (42.3846231, -72.5286609), (42.384539, -72.5287223), (42.3844565, -72.5287103),
+                                           (42.3844569, -72.5287837), (42.3836623, -72.5286169), (42.3826429, -72.5292619),
+                                           (42.3825326, -72.5293216), (42.3824351, -72.5293743), (42.3820827, -72.5293453),
+                                           (42.3816378, -72.5295789), (42.3809924, -72.5295381)]}
+
+        graph = create_graph("University of Massachusetts Amherst", 700, 1)
+        graph = ox.elevation.add_node_elevations_google(graph, api_key=config.GMAP_API_KEY)
+        origin_node = 5850031917
+        destination_node = 5850477768
+
+        actual_output = route_manager.get_best_path(3, graph, origin_node, destination_node, 200, True)
+        assert 'nodes' in actual_output
+        assert 'coordinates' in actual_output
+        assert len(actual_output['nodes']) == len(expected_output['nodes'])
+        assert len(actual_output['coordinates']) == len(expected_output['coordinates'])
+        assert all([a == b for a, b in zip(actual_output['nodes'], expected_output['nodes'])])
+        assert all([a == b for a, b in zip(actual_output['coordinates'], expected_output['coordinates'])])
+    else:
+        # skip assertion since elevation is required for which API key is required
+        assert 1 == 1
+
+
+def test_get_best_path_goldberg_radzik():
+    """ Test that valid path is returned by best_path for Goldberg-Radzik algo with valid input data """
+
+    if len(config.GMAP_API_KEY) > 0:
+        expected_output = {'nodes': [5850477768, 8390480484, 6313650321, 7278329712, 7278329716, 7278329711, 6353520414,
+                                     66703574, 66763514, 66616045, 66769370, 66623005, 6353520438, 9053602678,
+                                     9053602688, 66716430, 66702069, 5850031917],
+                           'coordinates': [(42.3809924, -72.5295381), (42.3816378, -72.5295789), (42.3820827, -72.5293453),
+                                           (42.3824351, -72.5293743), (42.3825326, -72.5293216), (42.3826429, -72.5292619),
+                                           (42.3836623, -72.5286169), (42.383668, -72.528536), (42.382628, -72.528253),
+                                           (42.3827924, -72.5272908), (42.381636, -72.526921), (42.381885, -72.525996),
+                                           (42.3819011, -72.5259348), (42.3823033, -72.5244141), (42.3823842, -72.5241217),
+                                           (42.382637, -72.523183), (42.382913, -72.522148), (42.3831146, -72.5214055)]}
+
+        graph = create_graph("University of Massachusetts Amherst", 700, 1)
+        graph = ox.elevation.add_node_elevations_google(graph, api_key=config.GMAP_API_KEY)
+        origin_node = 5850031917
+        destination_node = 5850477768
+
+        actual_output = route_manager.get_best_path(4, graph, origin_node, destination_node, 200, True)
         assert 'nodes' in actual_output
         assert 'coordinates' in actual_output
         assert len(actual_output['nodes']) == len(expected_output['nodes'])
