@@ -11,7 +11,7 @@ cursor.execute(f'''CREATE TABLE IF NOT EXISTS {table_name}
          (source TEXT NOT NULL,
          destination TEXT NOT NULL,
          algorithm_id INT NOT NULL CHECK (algorithm_id BETWEEN 0 AND 5),
-         path_percent INT NOT NULL CHECK (path_percent BETWEEN 100 AND 200),
+         path_percent INT NOT NULL CHECK (path_percent BETWEEN 100 AND 500),
          minimize_elevation_gain BOOLEAN NOT NULL CHECK (minimize_elevation_gain IN (0, 1)),
          transportation_mode INT NOT NULL CHECK (transportation_mode IN (0, 1)),
          result TEXT NOT NULL);''')

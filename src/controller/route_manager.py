@@ -43,7 +43,7 @@ def get_best_path(algorithm_id, graph, source_nearest_nodes, destination_nearest
     assert graph is not None, "Invalid Location"
     assert source_nearest_nodes is not None, "Invalid Source"
     assert destination_nearest_nodes is not None, "Invalid Destination"
-    assert path_percentage in range(100, 201), "Invalid Path Percentage"
+    assert path_percentage in range(100, 501), "Invalid Path Percentage"
 
     print(source_nearest_nodes)
     print(destination_nearest_nodes)

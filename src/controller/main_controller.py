@@ -33,7 +33,7 @@ def get_route():
     if constants.REQUEST_JSON_PATH_PERCENTAGE_KEY not in data \
             or not isinstance(data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY], (int, float)) \
             or data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY] < 100.0 \
-            or data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY] > 200.0:
+            or data[constants.REQUEST_JSON_PATH_PERCENTAGE_KEY] > 500.0:
         raise BadRequest(description="Path percentage is required and should be valid")
     if constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY not in data \
             or not isinstance(data[constants.REQUEST_JSON_MINIMIZE_ELEVATION_GAIN_KEY], bool):
