@@ -1,3 +1,12 @@
+var map;
+var bounds;
+var sourceMarker;
+var destinationMarker;
+var directionsService;
+var directionsRenderer
+var line;
+
+
 document.addEventListener('DOMContentLoaded', function() {
 initMap();
 
@@ -14,19 +23,7 @@ initMap();
             slider.addEventListener('mouseout', function() {
               sliderValue.textContent = '';
             });
-
-
-          });
-
-
-
-var map;
-var bounds;
-var sourceMarker;
-var destinationMarker;
-var directionsService;
-var directionsRenderer
-var line;
+});
 
 function scrollDown() {
   // Scroll to the bottom of the page
@@ -48,77 +45,17 @@ function initMap() {
 
 }
 
- // Show the map with the source and destination markers using line matching bw src and dest
- function showMap2() {
- var sourceInput = document.getElementById('source').value;
-      var destinationInput = document.getElementById('destination').value;
-
-      var geocoder = new google.maps.Geocoder();
-
-      // Geocode the source location
-      geocoder.geocode({ address: sourceInput }, function (results, status) {
-        if (status === 'OK' && results.length > 0) {
-          var sourceLatLng = results[0].geometry.location;
-
-          // Geocode the destination location
-          geocoder.geocode({ address: destinationInput }, function (results, status) {
-            if (status === 'OK' && results.length > 0) {
-              var destinationLatLng = results[0].geometry.location;
-
-              // Clear previous markers and line
-              if (sourceMarker) {
-                sourceMarker.setMap(null);
-              }
-              if (destinationMarker) {
-                destinationMarker.setMap(null);
-              }
-              if (line) {
-                line.setMap(null);
-              }
-
-              // Set the center of the map based on the source and destination coordinates
-              bounds = new google.maps.LatLngBounds();
-              bounds.extend(sourceLatLng);
-              bounds.extend(destinationLatLng);
-              map.fitBounds(bounds);
-
-              // Create markers for the source and destination locations
-              sourceMarker = new google.maps.Marker({
-                position: sourceLatLng,
-                map: map,
-                title: 'Source'
-              });
-              destinationMarker = new google.maps.Marker({
-                position: destinationLatLng,
-                map: map,
-                title: 'Destination'
-              });
-                // Create a line connecting the source and destination markers
-              line = new google.maps.Polyline({
-                path: [sourceLatLng, destinationLatLng],
-                geodesic: true,
-                strokeColor: '#FF0000',
-                strokeOpacity: 1.0,
-                strokeWeight: 2,
-                map: map
-              });
-            }
-          });
-        }
-      });
-    }
-
-
 // validate the form inputs
 function validateInput(){
   var source = document.getElementById("source").value;
   var destination = document.getElementById("destination").value;
   var algorithm = document.getElementById("algorithm").value;
   var minimize_elevation_gain = document.getElementById("minimize_elevation_gain").value;
+  var transportation_mode = document.getElementById("transportation_mode").value;
 
   if(source == "") {
     window.alert("Source Location is required.");
-    return false;
+     return false;
   }
 
   if(destination == "") {
@@ -126,48 +63,53 @@ function validateInput(){
     return false;
   }
 
-  if(algorithm == "Select Algorithm") {
+  if(minimize_elevation_gain == "") {
+        window.alert("Elevation is required.");
+        return false;
+    }
+
+  if(algorithm == "") {
     window.alert("Algorithm is required.");
     return false;
   }
 
-  if(minimize_elevation_gain == "Select Elevation") {
-      window.alert("Elevation is required.");
-      return false;
-  }
+if(transportation_mode=="")
+{
+    window.alert("Transportation mode is required.");
+    return false;
+}
 
   return true;
 }
 
-    function showMap(){
-            var short_path;
-            var coord_path;
-            validation=validateInput();
+function showMap(){
 
-            if(validation == true) {
-                                       const paragraph = document.getElementById('result');
+input_validation=validateInput();
 
-                                                          // Add text to the paragraph element
-                                        paragraph.textContent = 'Map is loading... Please wait !!!'
+if(input_validation == true) {
+
+const result_prompt = document.getElementById('result');
+result_prompt.textContent = 'Map is loading... Please wait !!!'
                                         
-var timeoutMilliseconds = 30000; // Set the timeout value in milliseconds (e.g., 10 seconds)
+var timeoutMilliseconds = 30000; // Set the timeout value for the API response in milliseconds
 
-// Create a timeout promise that will reject after the specified timeout duration
+// Timeout promise that will reject after the specified timeout duration
+
 var timeoutPromise = new Promise((resolve, reject) => {
   setTimeout(() => {
     reject(new Error('The request took too long. Please try again later.'));
   }, timeoutMilliseconds);
 });
 
- const url = '/getroute';
- const data = {
-                           source: document.getElementById("source").value,
-                           destination: document.getElementById("destination").value,
-                           algorithm_id: parseInt(document.getElementById("algorithm").value),
-                           path_percentage: parseFloat(document.getElementById("path_percentage").value),
-                           minimize_elevation_gain: document.getElementById("minimize_elevation_gain").value == "1",
-                           transportation_mode: parseInt(document.getElementById("transportation_mode").value)
-                         };
+const url = '/getroute';
+const data = {
+source: document.getElementById("source").value,
+destination: document.getElementById("destination").value,
+algorithm_id: parseInt(document.getElementById("algorithm").value),
+path_percentage: parseFloat(document.getElementById("path_percentage").value),
+minimize_elevation_gain: document.getElementById("minimize_elevation_gain").value == "1",
+transportation_mode: parseInt(document.getElementById("transportation_mode").value)
+};
 
 // Make the API call and race it against the timeout promise
 Promise.race([
@@ -181,6 +123,7 @@ Promise.race([
   timeoutPromise
 ])
   .then(response => {
+
     // Check if the response is the timeout error
     if (response instanceof Error) {
       throw response; // Propagate the timeout error
@@ -188,7 +131,6 @@ Promise.race([
     return response.json();
   })
   .then(data => {
-
                console.log(data);
                showPathOnMap(data["best_path_route"], data["shortest_path_distance"],  data["shortest_path_gain"],data["best_path_distance"], data["best_path_gain"],
                parseInt(document.getElementById("transportation_mode").value))
@@ -201,42 +143,41 @@ Promise.race([
     {
     alert(error.message)
     }
-    else{
+    else {
          alert("Implementation for this request doesn't exist. Try again with a different configuration!")
-                    console.error('Error:', error);
-         }
-
+         console.error('Error:', error);
+    }
+     reset();
   });
   }}
 
-      function showPathOnMap( best_route_path, shortest_route_distance, shortest_route_elevgain, best_route_distance, best_route_elevgain, transportation_mode) {
+function showPathOnMap( best_route_path, shortest_route_distance, shortest_route_elevgain, best_route_distance, best_route_elevgain, transportation_mode) {
+resetMap();
 
-         resetMap();
+var MAX_WAYPOINTS = 25; // Maximum number of waypoints allowed in current Google MAP free version
+var waypoints = [];
+var numWaypoints = best_route_path.length;
+var step = Math.ceil(numWaypoints / MAX_WAYPOINTS);
+for (var i = 0; i < numWaypoints; i += step) {
+    var latLng = new google.maps.LatLng(best_route_path[i][0], best_route_path[i][1]);
+    waypoints.push({
+     location: latLng,
+     stopover: true
+    });
+    bounds.extend(latLng);
+}
 
-         var MAX_WAYPOINTS = 25; // Maximum number of waypoints allowed
-         var waypoints = [];
-         var numWaypoints = best_route_path.length;
-         var step = Math.ceil(numWaypoints / MAX_WAYPOINTS);
-         for (var i = 0; i < numWaypoints; i += step) {
-           var latLng = new google.maps.LatLng(best_route_path[i][0], best_route_path[i][1]);
-           waypoints.push({
-             location: latLng,
-             stopover: true
-           });
-           bounds.extend(latLng);
-         }
-
-            var travelmode;
-            if (transportation_mode == 1)
-            travelmode=google.maps.TravelMode.WALKING
-            else
-            travelmode=google.maps.TravelMode.BICYCLING
+var travelMode;
+if (transportation_mode == 1)
+travelMode=google.maps.TravelMode.WALKING
+else
+travelMode=google.maps.TravelMode.BICYCLING
 
          var request = {
            origin: new google.maps.LatLng(best_route_path[0][0],best_route_path[0][1]),
            destination: new google.maps.LatLng(best_route_path[best_route_path.length - 1][0], best_route_path[best_route_path.length - 1][1]),
            waypoints: waypoints,
-           travelMode: travelmode
+           travelMode: travelMode
          };
 
          directionsService.route(request, function(response, status) {
@@ -248,13 +189,14 @@ Promise.race([
              {
              alert("We have shown an approximated path as the maximum number of waypoints has been exceeded ")
              }
+              const result_prompt = document.getElementById('result');
 
-              const paragraph = document.getElementById('result');
+              result_prompt.textContent = 'We found the best route for you !!  The elevation gain of this path is '+ best_route_elevgain.toFixed(2) + ' m and the distance is ' + best_route_distance.toFixed(2)+ ' m.'
 
-                   // Add text to the paragraph element
-              paragraph.textContent = 'We found the best route for you !! The elevation gain of this path is '+ best_route_elevgain.toFixed(2)
+           }
+           else {
 
-           }  else if (status === google.maps.DirectionsStatus.NOT_FOUND) {
+                if (status === google.maps.DirectionsStatus.NOT_FOUND) {
                   alert('Directions not found. Please check the provided locations.');
                 } else if (status === google.maps.DirectionsStatus.ZERO_RESULTS) {
                   alert('No route could be found between the provided locations.');
@@ -270,9 +212,10 @@ Promise.race([
                   alert('An unknown error occurred while requesting directions.');
                 } else {
                   alert('An error occurred with the Directions API.');
-                   console.error('Directions request failed: ' + status);
                 }
-         });
+               console.error('Some error occurred via Google Maps API' + status);
+               reset();
+         }});
         }
 
         function reset() {
@@ -281,16 +224,14 @@ Promise.race([
               document.getElementById("minimize_elevation_gain").value = "0";
                document.getElementById("algorithm").value="0";
                document.getElementById("transportation_mode").value="0";
-               const paragraph = document.getElementById('result');
-
-                                                 // Add text to the paragraph element
-               paragraph.textContent = 'Fill this form to find the best path on the map'
+               const result_prompt = document.getElementById('result');
+               result_prompt.textContent = 'Fill this form to find the best path on the map'
                resetMap()
         }
 
         function resetMap()
         {
-          map = new google.maps.Map(document.getElementById('map'), {
+               map = new google.maps.Map(document.getElementById('map'), {
                      center: {lat: 42.4047084, lng: -72.5289678},
                      zoom: 12
                    });
