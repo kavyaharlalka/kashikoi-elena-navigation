@@ -8,6 +8,8 @@ import src.config as config
 
 
 def cleanup_delete_record(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode):
+    """ Helper method to cleanup records added during testing """
+
     connection = sqlite3.connect(config.DATABASE_NAME)
     cursor = connection.cursor()
     cursor.execute(f'delete from {config.TABLE_NAME} where source = ? and destination = ? and algorithm_id = ? and path_percent = ? and minimize_elevation_gain = ? and transportation_mode = ?;',
@@ -18,6 +20,8 @@ def cleanup_delete_record(source, destination, algorithm_id, path_percent, minim
 
 
 def test_insert_into_database_invalid_data():
+    """ Test that error is thrown when we try to insert any invalid data (eg - algo id is 10) """
+
     source = 'Dummy source'
     destination = 'Dummy destination'
     algorithm_id = 10
@@ -31,6 +35,8 @@ def test_insert_into_database_invalid_data():
 
 
 def test_insert_into_database():
+    """ Test database insertion operation """
+
     expected_output_number_of_records = 1
 
     source = 'Dummy source'
@@ -63,6 +69,8 @@ def test_insert_into_database():
 
 
 def test_get_navigation_if_exists():
+    """ Test database fetch operation """
+
     expected_output = {'testingKeyStr': 'testingValue', 'testingKeyInt': 10, 'testingKeyBool': True}
 
     source = 'Dummy source'
