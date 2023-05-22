@@ -15,7 +15,7 @@ There is a comprehensive test suite for our application to ensure that all the f
 
 ## How to run unit tests
 
-1. Run "python3 -m pytest" to run all the test cases
+1. Run "pytest" in the root folder to run all the test cases
 2. The test session summary has been provided in the design document and the evaluation report.
 
 ## How to run integration tests
