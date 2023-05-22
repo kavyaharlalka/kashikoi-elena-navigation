@@ -96,7 +96,7 @@ def get_best_path(algorithm_id, graph, source_nearest_nodes, destination_nearest
     elif algorithm_id == Algorithms.FLOYD_WARSHALL.value:
         best_path = [destination_nearest_nodes]
         if not source_nearest_nodes == destination_nearest_nodes:
-            predecessors, distance = networkx.floyd_warshall_predecessor_and_distance(nx_graph, weight=custom_weight_func)
+            predecessors, distance = networkx.floyd_warshall_predecessor_and_distance(nx_graph, weight='length')
             best_path = networkx.reconstruct_path(source_nearest_nodes, destination_nearest_nodes, predecessors)
 
     return {"nodes": best_path, "coordinates": get_coordinates_from_nodes(graph, best_path)}
