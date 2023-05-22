@@ -1,5 +1,7 @@
 import requests
 import time
+import numpy as np
+import matplotlib.pyplot as plt
 
 HOST = "127.0.0.1"
 PORT = "5000"
@@ -58,3 +60,15 @@ for destination in destinations:
 
 print(f"min_elevation_reesponse_time:{min_elev_response_times}")
 print(f"max_elevation_response_time:{max_elev_response_times}")
+
+
+x = [0, 1, 2, 3, 4]
+
+plt.plot(min_elev_response_times, label ='Minimum Elevation')
+plt.plot(max_elev_response_times, '-.', label ='Maximum Elevation')
+
+plt.xlabel("Path Distance")
+plt.ylabel("Response Time")
+plt.legend()
+plt.title('Response Time for Minimum and Maximum Elevation for Dijkstras Algorithm')
+plt.show()

@@ -1,5 +1,7 @@
 import requests
 import time
+import numpy as np
+import matplotlib.pyplot as plt
 
 HOST = "127.0.0.1"
 PORT = "5000"
@@ -53,5 +55,23 @@ for algo in algos:
         max_elev_response_times.append(post_time_end - post_time_start)
 
 print(f"Algos:{algos}")
+
 print(f"min_elevation_reesponse_time:{min_elev_response_times}")
 print(f"max_elevation_response_time:{max_elev_response_times}")
+
+
+fig = plt.figure(figsize = (10, 5))
+
+algo=["Dijkstra", "Bidirectional Dijkstra", "A*"]
+
+x = np.arange(3)
+width = 0.2
+
+# plot data in grouped manner of bar type
+plt.bar(x-0.2, min_elev_response_times, width, color='cyan')
+plt.bar(x+0.2, max_elev_response_times, width, color='green')
+plt.xticks(x, ["Dijkstra", "Bidirectional Dijkstra", "A*"])
+plt.xlabel("Algorithm")
+plt.ylabel("API Response Time")
+plt.legend(["Minimum Elevation", "Maximum Elevation"])
+plt.show()
