@@ -131,14 +131,14 @@ function showMap() {
                 return response.json();
             })
             .then(data => {
-            var best_route_path=data["best_path_route"];
-            var best_path_distance=data["best_path_distance"];
-            var best_path_gain=data["best_path_gain"];
-            var shortest_path_distance=data["shortest_path_distance"];
-            var shortest_path_gain=data["shortest_path_gain"];
-            var transportation_mode=parseInt(document.getElementById("transportation_mode").value);
-             console.log(data);
-             showPathOnMap(best_route_path, best_path_distance, best_path_gain,transportation_mode)
+                var best_route_path = data["best_path_route"];
+                var best_path_distance = data["best_path_distance"];
+                var best_path_gain = data["best_path_gain"];
+                var shortest_path_distance = data["shortest_path_distance"];
+                var shortest_path_gain = data["shortest_path_gain"];
+                var transportation_mode = parseInt(document.getElementById("transportation_mode").value);
+                console.log(data);
+                showPathOnMap(best_route_path, best_path_distance, best_path_gain, transportation_mode)
 
             })
             .catch(error => {
@@ -221,7 +221,7 @@ function showPathOnMap(best_route_path, best_route_distance, best_route_elevgain
 }
 
 /* Function to reset all the fields to their default values on the UI **
-**  Invoked in case of error from back-end and when user presses the reset button on UI */
+ **  Invoked in case of error from back-end and when user presses the reset button on UI */
 function reset() {
     document.getElementById("source").value = "";
     document.getElementById("destination").value = "";
