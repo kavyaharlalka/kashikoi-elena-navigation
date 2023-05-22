@@ -60,3 +60,29 @@ def test_insert_into_database():
 
     # Cleanup added record
     cleanup_delete_record(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode)
+
+
+def test_get_navigation_if_exists():
+    expected_output = {'testingKeyStr': 'testingValue', 'testingKeyInt': 10, 'testingKeyBool': True}
+
+    source = 'Dummy source'
+    destination = 'Dummy destination'
+    algorithm_id = 0
+    path_percent = 200
+    minimize_elevation_gain = True
+    transportation_mode = 1
+
+    connection = sqlite3.connect(config.DATABASE_NAME)
+    cursor = connection.cursor()
+    cursor.execute(
+        f'INSERT INTO {config.TABLE_NAME} (source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode, result) VALUES (?,?,?,?,?,?,?);',
+        (source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode, json.dumps(expected_output)))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    actual_output = db_manager.get_navigation_if_exists(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode)
+    assert actual_output == expected_output
+
+    # Cleanup added record
+    cleanup_delete_record(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode)
