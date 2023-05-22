@@ -4,7 +4,7 @@ import os
 os.chdir(os.path.dirname(__file__))
 print(os.getcwd())
 
-parser = configparser.SafeConfigParser()
+parser = configparser.ConfigParser()
 parser.read('config.ini')
 
 TEMPLATES_DIR = parser.get('APPLICATION', 'templates_directory')
