@@ -19,6 +19,16 @@ connection.commit()
 connection.close()
 
 def insert_into_database(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode, json_result):
+    """ Inserts the record into the sqlite database.
+    Parameters:
+        source -> Address of the origin
+        destination -> Address of the destination
+        algorithm_id -> Id of the algorithm to be used to get the best path
+        path_percentage -> Percentage of the shortest path
+        minimize_elevation_gain -> Will minimize elevation gain if set to true
+        transportation_mode -> The mode of transportation, either 'walk' or 'bike'
+        json_result -> The result to be stored in json format
+    """
     print(algorithm_id)
     connection = sqlite3.connect(config.DATABASE_NAME)
     cursor = connection.cursor()
@@ -29,6 +39,17 @@ def insert_into_database(source, destination, algorithm_id, path_percent, minimi
     connection.close()
 
 def get_navigation_if_exists(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode):
+    """ Gets the json result from the sqlite database.
+    Parameters:
+        source -> Address of the origin
+        destination -> Address of the destination
+        algorithm_id -> Id of the algorithm to be used to get the best path
+        path_percentage -> Percentage of the shortest path
+        minimize_elevation_gain -> Will minimize elevation gain if set to true
+        transportation_mode -> The mode of transportation, either 'walk' or 'bike'
+    Returns:
+        The result in json format
+    """
     connection = sqlite3.connect(config.DATABASE_NAME)
     cursor = connection.cursor()
     cursor.execute(f'select result from {table_name} where source = ? and destination = ? and algorithm_id = ? and path_percent = ? and minimize_elevation_gain = ? and transportation_mode = ?;',
