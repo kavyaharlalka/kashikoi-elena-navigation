@@ -11,6 +11,8 @@ def get_coordinates(location):
     Returns:
         Dictionary of coordinates. Use 'lat' to get latitude and 'lng' to get longitude.
     """
+    assert location is not None and isinstance(location, str) and len(location) > 0, "Invalid location/address"
+
     geo_code = gmaps_client.geocode(location)
     geo_code_coordinates = geo_code[0]['geometry']['location']
     return geo_code_coordinates

@@ -21,9 +21,13 @@ def about():
 def get_route():
     """ Get the best and shortest path between two nodes as per the given algorithm"""
     data = request.get_json(force=True)
-    if constants.REQUEST_JSON_SOURCE_KEY not in data or len(data[constants.REQUEST_JSON_SOURCE_KEY]) == 0:
+    if constants.REQUEST_JSON_SOURCE_KEY not in data \
+            or not isinstance(data[constants.REQUEST_JSON_SOURCE_KEY], str) \
+            or len(data[constants.REQUEST_JSON_SOURCE_KEY]) == 0:
         raise BadRequest(description="Source is required and should not be empty")
-    if constants.REQUEST_JSON_DESTINATION_KEY not in data or len(data[constants.REQUEST_JSON_DESTINATION_KEY]) == 0:
+    if constants.REQUEST_JSON_DESTINATION_KEY not in data \
+            or not isinstance(data[constants.REQUEST_JSON_DESTINATION_KEY], str) \
+            or len(data[constants.REQUEST_JSON_DESTINATION_KEY]) == 0:
         raise BadRequest(description="Destination is required and should not be empty")
     if constants.REQUEST_JSON_ALGORITHM_ID_KEY not in data \
             or not isinstance(data[constants.REQUEST_JSON_ALGORITHM_ID_KEY], int) \

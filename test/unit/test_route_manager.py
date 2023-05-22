@@ -1,6 +1,7 @@
 import os
 import src.controller.route_manager as route_manager
 import osmnx as ox
+import pytest
 
 from src.controller.helpers import constants
 import src.config as config
@@ -16,6 +17,37 @@ def test_get_coordinates_from_nodes():
     actual_output = route_manager.get_coordinates_from_nodes(graph, [origin_node, destination_node])
     assert len(actual_output) == len(expected_output)
     assert all([a == b for a, b in zip(actual_output, expected_output)])
+
+def test_get_best_path_invalid_algorithm_id_results_in_error():
+    origin_node = 5850031917
+    destination_node = 5850477768
+    with pytest.raises(AssertionError, match='Invalid Algorithm ID'):
+        route_manager.get_best_path(10, None, origin_node, destination_node, 200, True)
+
+def test_get_best_path_invalid_graph_results_in_error():
+    origin_node = 5850031917
+    destination_node = 5850477768
+    with pytest.raises(AssertionError, match='Invalid Location'):
+        route_manager.get_best_path(0, None, origin_node, destination_node, 200, True)
+
+def test_get_best_path_invalid_origin_results_in_error():
+    graph = create_graph("University of Massachusetts Amherst", 700, 1)
+    destination_node = 5850477768
+    with pytest.raises(AssertionError, match='Invalid Source'):
+        route_manager.get_best_path(0, graph, None, destination_node, 200, True)
+
+def test_get_best_path_invalid_destination_results_in_error():
+    graph = create_graph("University of Massachusetts Amherst", 700, 1)
+    origin_node = 5850031917
+    with pytest.raises(AssertionError, match='Invalid Destination'):
+        route_manager.get_best_path(0, graph, origin_node, None, 200, True)
+
+def test_get_best_path_invalid_path_percentage_results_in_error():
+    graph = create_graph("University of Massachusetts Amherst", 700, 1)
+    origin_node = 5850031917
+    destination_node = 5850477768
+    with pytest.raises(AssertionError, match='Invalid Path Percentage'):
+        route_manager.get_best_path(0, graph, origin_node, destination_node, 1000, True)
 
 def test_get_best_path():
     if len(config.GMAP_API_KEY) > 0:

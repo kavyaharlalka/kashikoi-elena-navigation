@@ -1,6 +1,11 @@
 import src.controller.api.google_maps_client as google_maps_client
 import src.config as config
+import pytest
 
+
+def test_get_coordinates_invalid_location_results_in_error():
+    with pytest.raises(AssertionError, match='Invalid location/address'):
+        google_maps_client.get_coordinates("")
 
 def test_get_coordinates():
     if len(config.GMAP_API_KEY) > 0:
