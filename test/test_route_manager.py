@@ -1,9 +1,5 @@
 import os
-
-import pytest
 import src.controller.route_manager as route_manager
-import pickle as p
-import networkx as nx
 import osmnx as ox
 
 from src.controller.helpers import constants
