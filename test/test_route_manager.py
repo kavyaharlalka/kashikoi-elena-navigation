@@ -12,18 +12,7 @@ import src.config as config
 def create_graph(location, distance, transportation_mode):
     return ox.graph_from_address(location, dist=distance, network_type=constants.TRANSPORTATION_MODES[transportation_mode])
 
-def input_for_test():
-    """Create a dummy graph with origin and destination locations for testing
-    
-    """
-    # graph = create_graph("University of Massachusetts Amherst", dist=700)
-    # origin_node = ox.nearest_nodes(graph, 42.3878210, -72.5239110)
-    # destination_node = 5850477768
-
 def test_get_coordinates_from_nodes():
-    """Test function for the cost function. The assertion should pass if the cost function works correctly.
-
-    """
     graph = create_graph("University of Massachusetts Amherst", 700, 1)
     origin_node = 5850031917
     destination_node = 5850477768
