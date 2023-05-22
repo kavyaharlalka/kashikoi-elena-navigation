@@ -50,13 +50,19 @@ def get_best_path(algorithm_id, graph, source_nearest_nodes, destination_nearest
 
     nx_graph = networkx.Graph(graph)
     shortest_path_distance = networkx.dijkstra_path_length(nx_graph, source=source_nearest_nodes, target=destination_nearest_nodes, weight='length')
-    max_distance = path_percentage * shortest_path_distance
+    max_distance = (path_percentage * shortest_path_distance) / 100.0
 
+    destination_node = graph.nodes[destination_nearest_nodes]
     def custom_weight_func(u, v, data):
-        current_distance = data['length']
         elevation_gain = abs(nx_graph.nodes[v]['elevation'] - nx_graph.nodes[u]['elevation'])
 
-        if current_distance > max_distance or elevation_gain < 0:
+        current_node = nx_graph.nodes[v]
+        distance_from_destination = get_distance_from_destination(destination_node[constants.COORDINATES_Y],
+                                                                  destination_node[constants.COORDINATES_X],
+                                                                  current_node[constants.COORDINATES_Y],
+                                                                  current_node[constants.COORDINATES_X])
+
+        if distance_from_destination > max_distance or elevation_gain < 0:
             return None  # Ignore paths that exceed the max_distance
 
         # You can customize how elevation gain is prioritized (minimized or maximized)
@@ -119,14 +125,6 @@ def get_map_graph(source_coordinates, destination_coordinates, transportation_mo
         pickle.dump(map_graph, open(cached_graph_file_name, "wb"))
         print("Download complete")
 
-    destination_nearest_node = ox.nearest_nodes(map_graph, destination_coordinates[1], destination_coordinates[0])
-    destination_node = map_graph.nodes[destination_nearest_node]
-    for node, data in map_graph.nodes(data=True):
-        current_node = map_graph.nodes[node]
-        data['distance_from_destination'] = get_distance_from_destination(destination_node[constants.COORDINATES_Y],
-                                                                          destination_node[constants.COORDINATES_X],
-                                                                          current_node[constants.COORDINATES_Y],
-                                                                          current_node[constants.COORDINATES_X])
     return map_graph
 
 
@@ -199,25 +197,3 @@ def get_cost_between_nodes(graph, node_1, node_2, elevation_mode="vanilla"):
             return graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION]
     else:
         return abs(graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION])
-
-
-def populate_graph(graph):
-    assert graph is not None, "Invalid Location"
-
-    graph = ox.add_edge_grades(graph)
-    return graph
-
-
-def cost_function(path_length, gradient):
-    penalty_term = gradient ** 2
-    return (path_length * penalty_term) ** 2
-
-
-# add cost function to graph
-def modify_graph_elevate(graph):
-    assert graph is not None, "Invalid Location"
-
-    for _, __, ___, data in graph.edges(keys=True, data=True):
-        data['impedance'] = -cost_function(data['length'], data['grade'])
-        data['rise'] = data['length'] * data['grade']
-    return graph
