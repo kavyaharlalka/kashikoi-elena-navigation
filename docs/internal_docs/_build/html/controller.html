@@ -59,7 +59,28 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
 <section id="controller-main-controller-module">
-<h2>controller.main_controller module<a class="headerlink" href="#controller-main-controller-module" title="Permalink to this heading">¶</a></h2>
+<h2>controller.main_controller module<a class="headerlink" href="#controller-main-controller-module" title="Permalink to this heading">¶</a></h2><dl class="py function">
+<dt class="sig sig-object py" id="controller.main_controller.get_route">
+<span class="sig-prename descclassname"><span class="pre">controller.main_controller.</span></span><span class="sig-name descname"><span class="pre">get_route</span></span><span class="sig-paren"></span><a class="headerlink" href="#controller.main_controller.get_route" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the best and shortest path between two nodes as per the given algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns a JSON with the following key-value pairs:<br>
+            {<br>
+                "best_path_route": Array of coordinates of the best path,<br>
+                "best_path_distance": Value (in meters) of best path distance,<br>
+                "best_path_gain": Value (in meters) of best path gain,<br>
+                "best_path_drop": Value (in meters) of best path drop,<br>
+                "shortest_path_route": Array of coordinates of the shortest path,<br>
+                "shortest_path_distance": Value (in meters) of shortest path distance,<br>
+                "shortest_path_gain": Value (in meters) of shortest path gain,<br>
+                "shortest_path_drop": Value (in meters) of shortest path drop<br>
+            }<br>
+         <br>
+    These statistics will be used to show the best distance to the users that we have calculated and how much elevation they will gain or lose.</p>
+</dd>
+</dl>
+</dd></dl>
 </section>
 <section id="module-controller.route_manager">
 <span id="controller-route-manager-module"></span><h2>controller.route_manager module<a class="headerlink" href="#module-controller.route_manager" title="Permalink to this heading">¶</a></h2>
