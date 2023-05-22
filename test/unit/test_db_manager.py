@@ -80,6 +80,9 @@ def test_get_navigation_if_exists():
     minimize_elevation_gain = True
     transportation_mode = 1
 
+    # In case there are old testing records in the database
+    cleanup_delete_record(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode)
+
     connection = sqlite3.connect(config.DATABASE_NAME)
     cursor = connection.cursor()
     cursor.execute(
@@ -94,3 +97,20 @@ def test_get_navigation_if_exists():
 
     # Cleanup added record
     cleanup_delete_record(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode)
+
+def test_get_navigation_if_exists_not_existing_record_should_return_none():
+    """ Test database fetch operation in case record does not exist should return None and not throw error """
+
+    source = 'Dummy source'
+    destination = 'Dummy destination'
+    algorithm_id = 0
+    path_percent = 200
+    minimize_elevation_gain = True
+    transportation_mode = 1
+
+    # In case there are old testing records in the database
+    cleanup_delete_record(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode)
+
+    actual_output = db_manager.get_navigation_if_exists(source, destination, algorithm_id, path_percent, minimize_elevation_gain, transportation_mode)
+    assert actual_output is None
+
