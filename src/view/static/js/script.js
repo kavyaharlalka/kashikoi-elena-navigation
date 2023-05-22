@@ -35,7 +35,7 @@ function scrollDown() {
 
 // Initialize the map
 function initMap() {
-      reset();
+      resetMap();
         // Autocomplete for source input
       var sourceInput = document.getElementById('source');
       var sourceAutocomplete = new google.maps.places.Autocomplete(sourceInput);
@@ -119,6 +119,11 @@ var data = {
             var coord_path;
             var validation=true
 
+                           const paragraph = document.getElementById('result');
+
+                                              // Add text to the paragraph element
+                            paragraph.textContent = 'Map is loading... Please wait !!!'
+
             if(validation == true) {
 var timeoutMilliseconds = 30000; // Set the timeout value in milliseconds (e.g., 10 seconds)
 
@@ -160,10 +165,6 @@ Promise.race([
   .then(data => {
 
                console.log(data);
-               const paragraph = document.getElementById('result');
-
-                                  // Add text to the paragraph element
-                paragraph.textContent = 'Map is loading... Please wait !!!'
                showPathOnMap(data["best_path_route"], data["shortest_path_distance"],  data["shortest_path_gain"],data["best_path_distance"], data["best_path_gain"],
                parseInt(document.getElementById("transportation_mode").value))
 
@@ -185,7 +186,7 @@ Promise.race([
 
       function showPathOnMap( best_route_path, shortest_route_distance, shortest_route_elevgain, best_route_distance, best_route_elevgain, transportation_mode) {
 
-         reset();
+         resetMap();
 
          var MAX_WAYPOINTS = 25; // Maximum number of waypoints allowed
          var waypoints = [];
@@ -250,16 +251,31 @@ Promise.race([
         }
 
         function reset() {
-           map = new google.maps.Map(document.getElementById('map'), {
-             center: {lat: 42.4047084, lng: -72.5289678},
-             zoom: 12
-           });
-           directionsService = new google.maps.DirectionsService();
-           directionsRenderer = new google.maps.DirectionsRenderer({
-             map: map
-           });
-          bounds = new google.maps.LatLngBounds();
+              document.getElementById("source").value = "";
+              document.getElementById("destination").value = "";
+              document.getElementById("minimize_elevation_gain").value = "0";
+               document.getElementById("algorithm").value="0";
+               document.getElementById("transportation_mode").value="0";
+               const paragraph = document.getElementById('result');
+
+                                                 // Add text to the paragraph element
+               paragraph.textContent = 'Fill this form to find the best path on the map'
+               resetMap()
         }
+
+        function resetMap()
+        {
+          map = new google.maps.Map(document.getElementById('map'), {
+                     center: {lat: 42.4047084, lng: -72.5289678},
+                     zoom: 12
+                   });
+                   directionsService = new google.maps.DirectionsService();
+                   directionsRenderer = new google.maps.DirectionsRenderer({
+                     map: map
+                   });
+                  bounds = new google.maps.LatLngBounds();
+        }
+
 
 
 
