@@ -177,3 +177,15 @@ def test_get_cost_between_nodes_drop():
     else:
         # skip assertion since elevation is required for which API key is required
         assert 1 == 1
+
+def test_get_route_edge_attributes():
+    """ Test that valid edge attributes are returned by get_route_edge_attributes for valid input data """
+
+    expected_output = [64.975, 90.381, 82.065, 25.646, 132.671, 5.336, 80.866, 132.138, 81.117, 117.957, 6.675,
+                       145.775, 13.209, 11.674, 39.257, 54.79700000000001, 72.3]
+    graph = create_graph("University of Massachusetts Amherst", 700, 1)
+    best_path = [5850031917, 66702069, 66716430, 9053602688, 9053602678, 6353520438, 66623005, 66769370, 66616045,
+                      66763514, 66703574, 6353520414, 7278329711, 7278329716, 7278329712, 6313650321, 8390480484, 5850477768, 1]
+    actual_output = route_manager.get_route_edge_attributes(graph, best_path, 'length')
+    assert len(actual_output) == len(expected_output)
+    assert all([a == b for a, b in zip(actual_output, expected_output)])

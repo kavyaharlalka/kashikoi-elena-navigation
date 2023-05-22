@@ -193,13 +193,11 @@ def get_cost_between_nodes(graph, node_1, node_2, elevation_mode="vanilla"):
 
     if elevation_mode == "gain":
         return max(0.0, graph.nodes[node_2][constants.KEY_ELEVATION] - graph.nodes[node_1][constants.KEY_ELEVATION])
-    elif elevation_mode == "drop":
+    else:
         if graph.nodes[node_2][constants.KEY_ELEVATION] - graph.nodes[node_1][constants.KEY_ELEVATION] > 0:
             return 0.0
         else:
             return graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION]
-    else:
-        return abs(graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION])
 
 
 def get_route_edge_attributes(graph, path_nodes, attribute_name):
