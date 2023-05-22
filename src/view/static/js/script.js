@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Scroll to the bottom of the page to show the form and Map for good user experience
 function scrollDown() {
-    // Scroll to the bottom of the page to show the form and Map for good user experience
     window.scrollTo(0, 680);
 }
 
@@ -81,6 +81,7 @@ function validateInput() {
     return true;
 }
 
+/* Function to call the /getroute api to fetch best path coordinates between source and destination, when user presses the go button*/
 function showMap() {
 
     input_validation = validateInput();
@@ -130,13 +131,17 @@ function showMap() {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
-                showPathOnMap(data["best_path_route"], data["shortest_path_distance"], data["shortest_path_gain"], data["best_path_distance"], data["best_path_gain"],
-                    parseInt(document.getElementById("transportation_mode").value))
+            var best_route_path=data["best_path_route"];
+            var best_path_distance=data["best_path_distance"];
+            var best_path_gain=data["best_path_gain"];
+            var shortest_path_distance=data["shortest_path_distance"];
+            var shortest_path_gain=data["shortest_path_gain"];
+            var transportation_mode=parseInt(document.getElementById("transportation_mode").value);
+             console.log(data);
+             showPathOnMap(best_route_path, best_path_distance, best_path_gain,transportation_mode)
 
             })
             .catch(error => {
-
                 // Handle the timeout error and other catchable errors
                 if (error.message == "The request took too long. Please try again later.") {
                     alert(error.message)
@@ -149,9 +154,9 @@ function showMap() {
     }
 }
 
-function showPathOnMap(best_route_path, shortest_route_distance, shortest_route_elevgain, best_route_distance, best_route_elevgain, transportation_mode) {
+/* Function to plot the best path coordinates obtained from the /getroute api */
+function showPathOnMap(best_route_path, best_route_distance, best_route_elevgain, transportation_mode) {
     resetMap();
-
     var MAX_WAYPOINTS = 25; // Maximum number of waypoints allowed in current Google MAP free version
     var waypoints = [];
     var numWaypoints = best_route_path.length;
@@ -215,6 +220,8 @@ function showPathOnMap(best_route_path, shortest_route_distance, shortest_route_
     });
 }
 
+/* Function to reset all the fields to their default values on the UI **
+**  Invoked in case of error from back-end and when user presses the reset button on UI */
 function reset() {
     document.getElementById("source").value = "";
     document.getElementById("destination").value = "";
@@ -226,8 +233,10 @@ function reset() {
     resetMap()
 }
 
+/* Function to reset the Map on the UI */
 function resetMap() {
-    // Coordinates of University of Massachusetts
+
+    // Default Coordinates are set to University of Massachusetts
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
             lat: 42.391155,
