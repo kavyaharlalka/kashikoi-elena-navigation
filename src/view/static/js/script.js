@@ -109,22 +109,47 @@ function initMap() {
     }
 
 
-var url = 'your_api_endpoint';
-var data = {
-  // Your request data
-};
+// validate the form inputs
+function validateInput(){
+  var source = document.getElementById("source").value;
+  var destination = document.getElementById("destination").value;
+  var algorithm = document.getElementById("algorithm").value;
+  var minimize_elevation_gain = document.getElementById("minimize_elevation_gain").value;
+
+  if(source == "") {
+    window.alert("Source Location is required.");
+    return false;
+  }
+
+  if(destination == "") {
+    window.alert("Destination Location is required.");
+    return false;
+  }
+
+  if(algorithm == "Select Algorithm") {
+    window.alert("Algorithm is required.");
+    return false;
+  }
+
+  if(minimize_elevation_gain == "Select Elevation") {
+      window.alert("Elevation is required.");
+      return false;
+  }
+
+  return true;
+}
 
     function showMap(){
             var short_path;
             var coord_path;
-            var validation=true
-
-                           const paragraph = document.getElementById('result');
-
-                                              // Add text to the paragraph element
-                            paragraph.textContent = 'Map is loading... Please wait !!!'
+            validation=validateInput();
 
             if(validation == true) {
+                                       const paragraph = document.getElementById('result');
+
+                                                          // Add text to the paragraph element
+                                        paragraph.textContent = 'Map is loading... Please wait !!!'
+                                        
 var timeoutMilliseconds = 30000; // Set the timeout value in milliseconds (e.g., 10 seconds)
 
 // Create a timeout promise that will reject after the specified timeout duration
