@@ -231,8 +231,9 @@ travelMode=google.maps.TravelMode.BICYCLING
 
         function resetMap()
         {
+        // Coordinates of University of Massachusetts
                map = new google.maps.Map(document.getElementById('map'), {
-                     center: {lat: 42.4047084, lng: -72.5289678},
+                     center: {lat: 42.391155, lng: -72.526711},
                      zoom: 12
                    });
                    directionsService = new google.maps.DirectionsService();
