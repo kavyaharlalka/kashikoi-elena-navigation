@@ -1,17 +1,16 @@
+import configparser
 import os
 
-MAIN_DIR = os.path.dirname(os.path.realpath(__file__)) + "/"
+os.chdir(os.path.dirname(__file__))
+print(os.getcwd())
 
-APP_DIR = MAIN_DIR + "src/"
+parser = configparser.SafeConfigParser()
+parser.read('config.ini')
 
-TEMPLATES_DIR = "./view/templates"
+TEMPLATES_DIR = parser.get('APPLICATION', 'templates_directory')
+STATIC_DIR = parser.get('APPLICATION', 'static_directory')
 
-STATIC_DIR="./view/static"
+DATABASE_NAME = parser.get('DATABASE', 'database_name')
+TABLE_NAME = parser.get('DATABASE', 'table_name')
 
-CONTROLLER_DIR = APP_DIR + "controllers/"
-
-DATABASE_NAME = "navigation_history"
-
-TABLE_NAME = "history"
-
-GMAP_API_KEY = "AIzaSyAebd8LBGpJ1X9E6seWFbETQ7ZvpzN31Hg"
+GMAP_API_KEY = parser.get('API', 'gmap_api_key')
