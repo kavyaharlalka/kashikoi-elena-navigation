@@ -200,4 +200,3 @@ def get_cost_between_nodes(graph, node_1, node_2, elevation_mode="vanilla"):
             return graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION]
     else:
         return abs(graph.nodes[node_1][constants.KEY_ELEVATION] - graph.nodes[node_2][constants.KEY_ELEVATION])
-    
