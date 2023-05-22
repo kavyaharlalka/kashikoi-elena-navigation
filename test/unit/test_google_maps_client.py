@@ -4,10 +4,14 @@ import pytest
 
 
 def test_get_coordinates_invalid_location_results_in_error():
+    """ Test that error is thrown when we the location given to the function is invalid """
+
     with pytest.raises(AssertionError, match='Invalid location/address'):
         google_maps_client.get_coordinates("")
 
 def test_get_coordinates():
+    """ Test valid coordinates are returned for a valid location """
+
     if len(config.GMAP_API_KEY) > 0:
         expected_output = {'lat': 42.40483030000001, 'lng': -72.52925239999999}
         actual_output = google_maps_client.get_coordinates("1039 North Pleasant Street, Amherst, MA, USA")

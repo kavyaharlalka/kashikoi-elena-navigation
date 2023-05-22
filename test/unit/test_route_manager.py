@@ -7,9 +7,12 @@ from src.controller.helpers import constants
 import src.config as config
 
 def create_graph(location, distance, transportation_mode):
+    """ Helper method used to create a graph """
     return ox.graph_from_address(location, dist=distance, network_type=constants.TRANSPORTATION_MODES[transportation_mode])
 
 def test_get_coordinates_from_nodes():
+    """ Test valid coordinates are fetched for a list of nodes """
+
     graph = create_graph("University of Massachusetts Amherst", 700, 1)
     origin_node = 5850031917
     destination_node = 5850477768
@@ -19,30 +22,40 @@ def test_get_coordinates_from_nodes():
     assert all([a == b for a, b in zip(actual_output, expected_output)])
 
 def test_get_best_path_invalid_algorithm_id_results_in_error():
+    """ Test that error is thrown when invalid algorithm id is given to best_path """
+
     origin_node = 5850031917
     destination_node = 5850477768
     with pytest.raises(AssertionError, match='Invalid Algorithm ID'):
         route_manager.get_best_path(10, None, origin_node, destination_node, 200, True)
 
 def test_get_best_path_invalid_graph_results_in_error():
+    """ Test that error is thrown when invalid graph is given to best_path """
+
     origin_node = 5850031917
     destination_node = 5850477768
     with pytest.raises(AssertionError, match='Invalid Location'):
         route_manager.get_best_path(0, None, origin_node, destination_node, 200, True)
 
 def test_get_best_path_invalid_origin_results_in_error():
+    """ Test that error is thrown when invalid origin is given to best_path """
+
     graph = create_graph("University of Massachusetts Amherst", 700, 1)
     destination_node = 5850477768
     with pytest.raises(AssertionError, match='Invalid Source'):
         route_manager.get_best_path(0, graph, None, destination_node, 200, True)
 
 def test_get_best_path_invalid_destination_results_in_error():
+    """ Test that error is thrown when invalid destination is given to best_path """
+
     graph = create_graph("University of Massachusetts Amherst", 700, 1)
     origin_node = 5850031917
     with pytest.raises(AssertionError, match='Invalid Destination'):
         route_manager.get_best_path(0, graph, origin_node, None, 200, True)
 
 def test_get_best_path_invalid_path_percentage_results_in_error():
+    """ Test that error is thrown when invalid path percentage is given to best_path """
+
     graph = create_graph("University of Massachusetts Amherst", 700, 1)
     origin_node = 5850031917
     destination_node = 5850477768
@@ -50,6 +63,8 @@ def test_get_best_path_invalid_path_percentage_results_in_error():
         route_manager.get_best_path(0, graph, origin_node, destination_node, 1000, True)
 
 def test_get_best_path():
+    """ Test that valid path is returned by best_path for valid input data """
+
     if len(config.GMAP_API_KEY) > 0:
         expected_output = {'nodes': [5850031917, 66702069, 66716430, 66657614, 7873723660, 7873723658, 66682598,
                                      1445170567, 5850031602, 8388384018, 8388383988, 2296737893, 1445169892, 66654525,
@@ -83,6 +98,8 @@ def test_get_best_path():
         assert 1 == 1
 
 def test_get_map_graph():
+    """ Test that valid graph is returned get_map_graph by for valid input data """
+
     expected_number_of_nodes_in_graph = 59585
     expected_number_of_edges_in_graph = 159740
     cached_graph_file_name = "graph_walk.p"
@@ -95,11 +112,15 @@ def test_get_map_graph():
         assert 1 == 1
 
 def test_get_distance_from_destination():
+    """ Test that correct distance is returned by get_distance_from_destination for valid input data """
+
     expected_output = 560.8655027567112
     actual_output = route_manager.get_distance_from_destination(42.4067032, -72.5355951, 42.40483030000001, -72.52925239999999)
     assert actual_output == expected_output
 
 def test_calculate_and_get_elevation_gain():
+    """ Test that valid elevation gain is returned by calculate_and_get_elevation for valid input data """
+
     if len(config.GMAP_API_KEY) > 0:
         expected_output = 2.551000000000002
         graph = create_graph("University of Massachusetts Amherst", 700, 1)
@@ -113,6 +134,8 @@ def test_calculate_and_get_elevation_gain():
         assert 1 == 1
 
 def test_calculate_and_get_elevation_drop():
+    """ Test that valid elevation drop is returned by calculate_and_get_elevation for valid input data """
+
     if len(config.GMAP_API_KEY) > 0:
         expected_output = 21.744999999999997
         graph = create_graph("University of Massachusetts Amherst", 700, 1)
@@ -126,6 +149,8 @@ def test_calculate_and_get_elevation_drop():
         assert 1 == 1
 
 def test_get_cost_between_nodes_gain():
+    """ Test that valid cost for gain is returned by get_cost_between_nodes for valid input data """
+
     if len(config.GMAP_API_KEY) > 0:
         expected_output = 0.0
         graph = create_graph("University of Massachusetts Amherst", 700, 1)
@@ -139,6 +164,8 @@ def test_get_cost_between_nodes_gain():
         assert 1 == 1
 
 def test_get_cost_between_nodes_drop():
+    """ Test that valid cost for drop is returned by get_cost_between_nodes for valid input data """
+
     if len(config.GMAP_API_KEY) > 0:
         expected_output = 19.193999999999996
         graph = create_graph("University of Massachusetts Amherst", 700, 1)
