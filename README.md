@@ -14,6 +14,13 @@ divya1974 - Divya Sharma, Rohan Acharya
 <br>
 r-acharya - Divya Sharma, Rohan Acharya
 
+# Documentation
+We have added the complete documentation in the `docs` folder in the repository.
+* `docs` folder itself contains our Design Document, SRS document, User manual and Evaluation document.
+* `api_docs` consists of documentation created for users who want to use our api directly for their own application (this is a feature presented by us, our api is independent and can be used without our UI). 
+* `internal_docs` consists of the complete controller and model documentation generated automatically using sphinx.
+* `presentation` consists of the presentation video and presentation slides.
+
 # Problem Statement
 
 Navigation Systems typically provide the shortest path between any two given points. These are not optimal for a lot of scenarios where the user is interested in finding a path which has the least elevation gain. Moreover, some users might be interested in finding a path which has elevation gain so that they can partake in an intense and time-constrained workout. To extend navigation systems to solve the above problems, we have designed a software system that takes two points as input and finds the optimal route between them that maximizes or minimizes elevation gain while limiting the total path distance to n% of the shortest path between these two points.
