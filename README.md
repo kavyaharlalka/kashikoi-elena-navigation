@@ -1,4 +1,9 @@
 # CS 520: Kashikoi-EleNA
+Group name - Kashikoi
+Group members - Divya Sharma, Astha Baranwal, Rohan Acharya, Kavya Harlalka
+Pair programming Ids :-
+kavyaharlalka - Astha Baranwal, Kavya Harlalka
+Ast97 - Astha Baranwal, Kavya Harlalka
 
 # Problem Statement
 
