@@ -4,7 +4,7 @@ Group name - Kashikoi
 Group members - Divya Sharma, Astha Baranwal, Rohan Acharya, Kavya Harlalka
 <br>
 <br>
-Pair programming Ids :-
+Pair programming Ids
 <br>
 kavyaharlalka - Astha Baranwal, Kavya Harlalka
 <br>
@@ -13,6 +13,13 @@ Ast97 - Astha Baranwal, Kavya Harlalka
 divya1974 - Divya Sharma, Rohan Acharya
 <br>
 r-acharya - Divya Sharma, Rohan Acharya
+
+# Documentation
+We have added the complete documentation in the `docs` folder in the repository.
+* `docs` folder itself contains our Design Document, SRS document, User manual and Evaluation document.
+* `api_docs` consists of documentation created for users who want to use our api directly for their own application (this is a feature presented by us, our api is independent and can be used without our UI). 
+* `internal_docs` consists of the complete controller and model documentation generated automatically using sphinx.
+* `presentation` consists of the presentation video and presentation slides.
 
 # Problem Statement
 
