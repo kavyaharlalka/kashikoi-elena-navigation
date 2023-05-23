@@ -3,6 +3,8 @@ Group name - Kashikoi
 <br>
 Group members - Divya Sharma, Astha Baranwal, Rohan Acharya, Kavya Harlalka
 <br>
+Presentation link - https://drive.google.com/file/d/1kYjDzBjgHvEUk565uJN3MAUknJmqa5kL/view?usp=share_link
+<br>
 <br>
 Pair programming Ids
 <br>
@@ -27,33 +29,29 @@ Navigation Systems typically provide the shortest path between any two given poi
 
 # Steps to Run the Application
 
-1. Clone the repositors using git clone https://github.com/kavyaharlalka/kashikoi-elena-navigation.git
+1. Clone the repository using git clone https://github.com/kavyaharlalka/kashikoi-elena-navigation.git
 2. Run 'pip install -r requirements.txt'
-3. Run bash run.sh to start the server
-4. After the server is running, go to the local host http://127.0.0.1:5000/
+3. Go to kashikoi-elena-navigation/src/view/templates/index.html and replace <API_KEY_HERE> with your Google Map API Key
+4. Go to kashikoi-elena-navigation/src/config.ini and enter your gmap_api_key
+5. Run bash run.sh to start the server
+6. After the server is running, go to the local host http://127.0.0.1:5000/
 
 # Testing and Evaluation
 
 We have performed comprehensive testing for our application to ensure that all the functions and modules are tested and all corner cases are covered. Unit tests have been written using pytest and we have ensured 100% line and branch coverage for the controller and model code. For integration tests, we have tested the API and have covered positive and negative cases that are possible with different sets of inputs.
+
+We have also auto-generated documentation using Sphinx for all the module docstrings with module description, input parameters, and return parameters. Sphinx makes it possible to create intelligent and streamlined documentations to increase understandability. The generated documentation is split into API and internal documentation so that developers can see exactly how the API will be used and how the modules are structured.
 
 ## How to run unit tests
 
 1. Run "pytest" in the root folder to run all the test cases
 2. The test session summary has been provided in the design document and the evaluation report.
 
-## Unit Test Results
-
-![image19](https://github.com/kavyaharlalka/kashikoi-elena-navigation/assets/77462752/147fc9ba-ea98-42ce-a54d-f37740c0a94c)
-
 
 ## How to run integration tests
 
 1. Go to the folder test/integration
 2. Run "python3 -m pytest api_inttest.py"
-
-## Integration Test Results
-
-![WhatsApp Image 2023-05-22 at 8 15 28 PM](https://github.com/kavyaharlalka/kashikoi-elena-navigation/assets/77462752/9a13afb8-9ca8-48b7-a164-541aef7a0cf7)
 
 
 
