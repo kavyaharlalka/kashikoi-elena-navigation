@@ -27,7 +27,7 @@ Navigation Systems typically provide the shortest path between any two given poi
 
 # Testing and Evaluation
 
-There is a comprehensive test suite for our application to ensure that all the functions and modules are tested and all corner cases are covered. Unit tests have been written using pytest and we have ensured 100% line and branch coverage for the controller and model code. For integration tests, we have tested the API and have covered positive and negative cases that are possible with different sets of inputs.
+We have performed comprehensive testing for our application to ensure that all the functions and modules are tested and all corner cases are covered. Unit tests have been written using pytest and we have ensured 100% line and branch coverage for the controller and model code. For integration tests, we have tested the API and have covered positive and negative cases that are possible with different sets of inputs.
 
 ## How to run unit tests
 
