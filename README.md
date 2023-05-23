@@ -7,7 +7,7 @@ Navigation Systems typically provide the shortest path between any two given poi
 # Steps to Run the Application
 
 1. Clone the repositors using git clone https://github.com/kavyaharlalka/kashikoi-elena-navigation.git
-2. Run 'python3 -m pip install requirements.txt'
+2. Run 'pip install -r requirements.txt'
 3. Run bash run.sh to start the server
 4. After the server is running, go to the local host http://127.0.0.1:5000/
 
@@ -27,6 +27,12 @@ There is a comprehensive test suite for our application to ensure that all the f
 
 ## How to run integration tests
 
+1. Go to the folder test/integration
+2. Run "python3 -m pytest api_inttest.py"
+
 ## Integration Test Results
+
+![WhatsApp Image 2023-05-22 at 8 15 28 PM](https://github.com/kavyaharlalka/kashikoi-elena-navigation/assets/77462752/9a13afb8-9ca8-48b7-a164-541aef7a0cf7)
+
 
 
