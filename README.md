@@ -45,19 +45,11 @@ We have also auto-generated documentation using Sphinx for all the module docstr
 1. Run "pytest" in the root folder to run all the test cases
 2. The test session summary has been provided in the design document and the evaluation report.
 
-## Unit Test Results
-
-![image19](https://github.com/kavyaharlalka/kashikoi-elena-navigation/assets/77462752/147fc9ba-ea98-42ce-a54d-f37740c0a94c)
-
 
 ## How to run integration tests
 
 1. Go to the folder test/integration
 2. Run "python3 -m pytest api_inttest.py"
-
-## Integration Test Results
-
-![WhatsApp Image 2023-05-22 at 8 15 28 PM](https://github.com/kavyaharlalka/kashikoi-elena-navigation/assets/77462752/9a13afb8-9ca8-48b7-a164-541aef7a0cf7)
 
 
 
