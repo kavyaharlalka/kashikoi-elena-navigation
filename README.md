@@ -4,7 +4,7 @@ Group name - Kashikoi
 Group members - Divya Sharma, Astha Baranwal, Rohan Acharya, Kavya Harlalka
 <br>
 <br>
-Pair programming Ids :-
+Pair programming Ids
 <br>
 kavyaharlalka - Astha Baranwal, Kavya Harlalka
 <br>
