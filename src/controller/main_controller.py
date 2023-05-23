@@ -4,7 +4,7 @@ import controller.route_manager as route_manager
 import controller.api.google_maps_client as gmap_client
 import controller.helpers.constants as constants
 import osmnx as ox
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, HTTPException
 import model.db_manager as db
 
 def home():
@@ -129,5 +129,7 @@ def get_route():
                                 data[constants.REQUEST_JSON_TRANSPORTATION_MODE_KEY],
                                 result)
         return result
+    except HTTPException as e:
+        abort(e.code, str(e))
     except Exception as e:
-        abort(400, str(e))
+        abort(500, str(e))
